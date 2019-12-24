@@ -10,35 +10,28 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "additional_stuff")
-public class AdditionalStuff extends TackingInfo implements Serializable {
+@Table(name = "order_additional_stuff")
+public class OrderAdditionalStuff extends TackingInfo implements Serializable{
 
-	private static final long serialVersionUID = 8081514754610293601L;
+	private static final long serialVersionUID = -121078458244400882L;
 
 	@Id
 	@Column(name = "stuff_name")
 	private String stuffName;
 
 	@Column(name = "stuff_category")
-	private AdditionalStuffCategoryEnum stuffCategory;
-	
+	private String stuffCategory;
+
 	@Column(name = "price")
 	private double price;
 
+	@Column(name = "ordered_quantity")
+	private long orderedQuantity;
+
 	@ManyToOne
 	@JoinColumn(name = "pizza_name", insertable = false, updatable = false, nullable = true)
-	private Pizza pizza;
+	private OrderPizza orderPizza;
 	
-	public AdditionalStuff() {
-	}
-
-	public AdditionalStuff(String stuffName, AdditionalStuffCategoryEnum stuffCategory, double price) {
-		super();
-		this.stuffName = stuffName;
-		this.stuffCategory = stuffCategory;
-		this.price = price;
-	}
-
 	public String getStuffName() {
 		return stuffName;
 	}
@@ -47,11 +40,11 @@ public class AdditionalStuff extends TackingInfo implements Serializable {
 		this.stuffName = stuffName;
 	}
 
-	public AdditionalStuffCategoryEnum getStuffCategory() {
+	public String getStuffCategory() {
 		return stuffCategory;
 	}
 
-	public void setStuffCategory(AdditionalStuffCategoryEnum stuffCategory) {
+	public void setStuffCategory(String stuffCategory) {
 		this.stuffCategory = stuffCategory;
 	}
 
@@ -63,11 +56,20 @@ public class AdditionalStuff extends TackingInfo implements Serializable {
 		this.price = price;
 	}
 
-	public Pizza getPizza() {
-		return pizza;
+	public long getOrderedQuantity() {
+		return orderedQuantity;
 	}
 
-	public void setPizza(Pizza pizza) {
-		this.pizza = pizza;
+	public void setOrderedQuantity(long orderedQuantity) {
+		this.orderedQuantity = orderedQuantity;
 	}
+
+	public OrderPizza getOrderPizza() {
+		return orderPizza;
+	}
+
+	public void setOrderPizza(OrderPizza orderPizza) {
+		this.orderPizza = orderPizza;
+	}
+	
 }

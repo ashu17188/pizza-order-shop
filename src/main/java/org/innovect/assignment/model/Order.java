@@ -14,14 +14,11 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "pizza_order")
-public class PizzaOrder extends TackingInfo implements Serializable {
+@Table(name = "order_main")
+public class Order extends TackingInfo implements Serializable {
 
 	private static final long serialVersionUID = 1559908347912663433L;
 
-	/**
-	 * IP and timestamp based UUID (IETF RFC 4122 version 1)
-	 */
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	@Column(name = "order_id")
@@ -29,13 +26,12 @@ public class PizzaOrder extends TackingInfo implements Serializable {
 
 	@OneToMany(cascade = { CascadeType.ALL })
 	@JoinColumn(name = "order_id")
-	private List<Pizza> pizzaList;
+	private List<OrderPizza> pizzaList;
 
-	
 	@OneToMany(cascade = { CascadeType.ALL })
 	@JoinColumn(name = "order_id")
-	private List<Sides> sideOrderList;
-	
+	private List<OrderSides> sideOrderList;
+
 	public int getOrderId() {
 		return orderId;
 	}
@@ -44,19 +40,19 @@ public class PizzaOrder extends TackingInfo implements Serializable {
 		this.orderId = orderId;
 	}
 
-	public List<Pizza> getPizzaList() {
+	public List<OrderPizza> getPizzaList() {
 		return pizzaList;
 	}
 
-	public void setPizzaList(List<Pizza> pizzaList) {
+	public void setPizzaList(List<OrderPizza> pizzaList) {
 		this.pizzaList = pizzaList;
 	}
 
-	public List<Sides> getSideOrderList() {
+	public List<OrderSides> getSideOrderList() {
 		return sideOrderList;
 	}
 
-	public void setSideOrderList(List<Sides> sideOrderList) {
+	public void setSideOrderList(List<OrderSides> sideOrderList) {
 		this.sideOrderList = sideOrderList;
 	}
 }
