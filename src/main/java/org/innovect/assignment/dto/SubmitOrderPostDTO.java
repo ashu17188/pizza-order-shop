@@ -2,13 +2,11 @@ package org.innovect.assignment.dto;
 
 import java.util.List;
 
-import org.innovect.assignment.model.OrderSides;
-
 public class SubmitOrderPostDTO {
 
 	private List<OrderPizzaDTO> orderPizzaDTOList;
 
-	private List<OrderSides> sideOrderList;
+	private List<OrderSidesDTO> sideOrderList;
 
 	public List<OrderPizzaDTO> getOrderPizzaDTOList() {
 		return orderPizzaDTOList;
@@ -18,11 +16,11 @@ public class SubmitOrderPostDTO {
 		this.orderPizzaDTOList = orderPizzaDTOList;
 	}
 
-	public List<OrderSides> getSideOrderList() {
+	public List<OrderSidesDTO> getSideOrderList() {
 		return sideOrderList;
 	}
 
-	public void setSideOrderList(List<OrderSides> sideOrderList) {
+	public void setSideOrderList(List<OrderSidesDTO> sideOrderList) {
 		this.sideOrderList = sideOrderList;
 	}
 	

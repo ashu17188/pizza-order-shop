@@ -29,7 +29,7 @@ public class OrderPizza extends TackingInfo implements Serializable {
 	private String pizzaSize;
 
 	@Column(name = "price")
-	private String price;
+	private double price;
 	
 	@Column(name = "crust")
 	private String crust;
@@ -68,12 +68,12 @@ public class OrderPizza extends TackingInfo implements Serializable {
 	public void setPizzaSize(String pizzaSize) {
 		this.pizzaSize = pizzaSize;
 	}
-
-	public String getPrice() {
+	
+	public double getPrice() {
 		return price;
 	}
 
-	public void setPrice(String price) {
+	public void setPrice(double price) {
 		this.price = price;
 	}
 

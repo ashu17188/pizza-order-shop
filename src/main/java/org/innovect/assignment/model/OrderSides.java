@@ -26,6 +26,9 @@ public class OrderSides  extends TackingInfo implements Serializable {
 	@JoinColumn(name = "order_id", insertable = false, updatable = false, nullable = true)
 	private Order order;
 
+	@Column(name = "ordered_quantity")
+	private long orderedQuantity;
+	
 	public String getSideName() {
 		return sideName;
 	}
@@ -50,4 +53,13 @@ public class OrderSides  extends TackingInfo implements Serializable {
 		this.order = order;
 	}
 
+	public long getOrderedQuantity() {
+		return orderedQuantity;
+	}
+
+	public void setOrderedQuantity(long orderedQuantity) {
+		this.orderedQuantity = orderedQuantity;
+	}
+
+	
 }

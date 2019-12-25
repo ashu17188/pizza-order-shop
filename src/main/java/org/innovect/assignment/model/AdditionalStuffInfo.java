@@ -23,6 +23,9 @@ public class AdditionalStuffInfo extends TackingInfo implements Serializable {
 	@Column(name = "price")
 	private double price;
 
+	/**
+	 * Specifies whether pizza is available in inventory or not.
+	 */
 	@Column(name = "stock_quantity")
 	private long stockQuantity;
 

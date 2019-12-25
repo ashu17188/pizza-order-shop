@@ -14,6 +14,19 @@ public class PizzaInfoDTO {
 
 	private long stockQuantity;
 
+	public PizzaInfoDTO(){}
+	
+	public PizzaInfoDTO(int pizzaInfoId, String pizzaName, String pizzaCategory, String pizzaSize, double price,
+			long stockQuantity) {
+		super();
+		this.pizzaInfoId  = pizzaInfoId;
+		this.pizzaName = pizzaName;
+		this.pizzaCategory = pizzaCategory;
+		this.pizzaSize = pizzaSize;
+		this.price = price;
+		this.stockQuantity = stockQuantity;
+	}
+
 	public int getPizzaInfoId() {
 		return pizzaInfoId;
 	}

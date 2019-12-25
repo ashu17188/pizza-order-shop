@@ -10,6 +10,16 @@ public class AdditionalStuffInfoDTO {
 
 	private long stockQuantity;
 
+	public AdditionalStuffInfoDTO() {}
+	
+	public AdditionalStuffInfoDTO(String stuffName, String stuffCategory, double price, long stockQuantity) {
+		super();
+		this.stuffName = stuffName;
+		this.stuffCategory = stuffCategory;
+		this.price = price;
+		this.stockQuantity = stockQuantity;
+	}
+
 	public String getStuffName() {
 		return stuffName;
 	}
