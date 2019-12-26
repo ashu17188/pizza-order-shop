@@ -64,4 +64,9 @@ public class AdditionalStuffInfo extends TackingInfo implements Serializable {
 		this.stockQuantity = stockQuantity;
 	}
 
+	@Override
+	public String toString() {
+		return "AdditionalStuffInfo [stuffName=" + stuffName + ", stuffCategory=" + stuffCategory + ", price=" + price
+				+ ", stockQuantity=" + stockQuantity + "]";
+	}
 }

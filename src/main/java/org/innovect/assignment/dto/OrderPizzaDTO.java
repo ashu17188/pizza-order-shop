@@ -10,13 +10,26 @@ public class OrderPizzaDTO {
 
 	private String pizzaSize;
 
-	private String price;
+	private double price;
 
 	private String crust;
 
 //	private Order order;
 
-	private List<OrderAdditionalStuffDTO> orderAdditionalStuffDTOList;
+	private List<OrderAdditionalStuffDTO> orderAdditionalStuffList;
+
+	public OrderPizzaDTO() {}
+	
+	public OrderPizzaDTO(String pizzaName, String pizzaCategory, String pizzaSize, double price, String crust,
+			List<OrderAdditionalStuffDTO> orderAdditionalStuffList) {
+		super();
+		this.pizzaName = pizzaName;
+		this.pizzaCategory = pizzaCategory;
+		this.pizzaSize = pizzaSize;
+		this.price = price;
+		this.crust = crust;
+		this.orderAdditionalStuffList = orderAdditionalStuffList;
+	}
 
 	public String getPizzaName() {
 		return pizzaName;
@@ -41,12 +54,12 @@ public class OrderPizzaDTO {
 	public void setPizzaSize(String pizzaSize) {
 		this.pizzaSize = pizzaSize;
 	}
-
-	public String getPrice() {
+	
+	public double getPrice() {
 		return price;
 	}
 
-	public void setPrice(String price) {
+	public void setPrice(double price) {
 		this.price = price;
 	}
 
@@ -58,12 +71,19 @@ public class OrderPizzaDTO {
 		this.crust = crust;
 	}
 
-	public List<OrderAdditionalStuffDTO> getOrderAdditionalStuffDTOList() {
-		return orderAdditionalStuffDTOList;
+	public List<OrderAdditionalStuffDTO> getOrderAdditionalStuffList() {
+		return orderAdditionalStuffList;
 	}
 
-	public void setOrderAdditionalStuffDTOList(List<OrderAdditionalStuffDTO> orderAdditionalStuffDTOList) {
-		this.orderAdditionalStuffDTOList = orderAdditionalStuffDTOList;
+	public void setOrderAdditionalStuffList(List<OrderAdditionalStuffDTO> orderAdditionalStuffList) {
+		this.orderAdditionalStuffList = orderAdditionalStuffList;
 	}
 
+	@Override
+	public String toString() {
+		return "OrderPizzaDTO [pizzaName=" + pizzaName + ", pizzaCategory=" + pizzaCategory + ", pizzaSize=" + pizzaSize
+				+ ", price=" + price + ", crust=" + crust + ", orderAdditionalStuffList=" + orderAdditionalStuffList
+				+ "]";
+	}
+	
 }

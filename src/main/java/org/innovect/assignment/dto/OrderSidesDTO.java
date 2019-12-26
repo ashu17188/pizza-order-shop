@@ -8,6 +8,15 @@ public class OrderSidesDTO {
 
 	private long orderedQuantity;
 
+	public OrderSidesDTO() {}
+	
+	public OrderSidesDTO(String sideName, double price, long orderedQuantity) {
+		super();
+		this.sideName = sideName;
+		this.price = price;
+		this.orderedQuantity = orderedQuantity;
+	}
+
 	public String getSideName() {
 		return sideName;
 	}
@@ -32,4 +41,9 @@ public class OrderSidesDTO {
 		this.orderedQuantity = orderedQuantity;
 	}
 
+	@Override
+	public String toString() {
+		return "OrderSidesDTO [sideName=" + sideName + ", price=" + price + ", orderedQuantity=" + orderedQuantity
+				+ "]";
+	}
 }

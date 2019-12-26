@@ -1,7 +1,7 @@
 package org.innovect.assignment.model;
 
 public enum PizzaInfoCategoryEnum {
-	VEGETARIAN_PIZZA("Vegetarian"), NON_VEGETARIAN("Non Vegetarian");
+	VEGETARIAN_PIZZA("Vegetarian"), NON_VEGETARIAN("Non-Vegetarian");
 
 	private final String category;
 

@@ -1,6 +1,7 @@
 package org.innovect.assignment.model;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -9,13 +10,14 @@ import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import org.hibernate.annotations.GenericGenerator;
 import org.innovect.assignment.utils.PizzaShopUtils;
+import org.springframework.util.StringUtils;
 
 import com.google.common.util.concurrent.AtomicDouble;
 
@@ -26,10 +28,20 @@ public class Order extends TackingInfo implements Serializable {
 	private static final long serialVersionUID = 1559908347912663433L;
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
-	@Column(name = "order_id")
-	private long orderId;
+	@GeneratedValue(generator = "UUID")
+	@GenericGenerator(name = "UUID", strategy = "org.hibernate.id.UUIDGenerator")
+	@Column(name = "order_id", updatable = false, nullable = false)
+	private String orderId;
 
+	@Column(name = "customer_name")
+	private String custName;
+	
+	@Column(name = "contact_number")
+	private String contactNumber;
+	
+	@Column(name = "delivery_address")
+	private String deliveryAddress;
+	
 	@OneToMany(cascade = { CascadeType.ALL })
 	@JoinColumn(name = "order_id")
 	private List<OrderPizza> pizzaList;
@@ -38,7 +50,7 @@ public class Order extends TackingInfo implements Serializable {
 	@JoinColumn(name = "order_id")
 	private List<OrderSides> sideOrderList;
 
-	@JoinColumn(name = "total_amount")
+	@Column(name = "total_amount")
 	private double totalAmountToPay;
 
 	/**
@@ -49,17 +61,19 @@ public class Order extends TackingInfo implements Serializable {
 	 *         exception because of validation issue.
 	 */
 	public String addPizza(OrderPizza orderPizza, List<String> unavailableStuffName) {
-		String validationResponse = validatePizza(orderPizza, unavailableStuffName);
+		String validationResponse = "";
+		if (orderPizza.getPizzaSize().equals(PizzaShopUtils.LARGE_PIZZA)) {
+			validationResponse = validateLargePizza(orderPizza, unavailableStuffName);
+		} else {
+			validationResponse = validateRegularAndMediumPizza(orderPizza, unavailableStuffName);
+		}
+
 		if (!PizzaShopUtils.SUCCESSFUL_OPERATION.equalsIgnoreCase(validationResponse)) {
 			throw new RuntimeException(validationResponse);
 		}
-		this.pizzaList.add(orderPizza);
+		getPizzaList().add(orderPizza);
 		this.totalAmountToPay += orderPizza.getPrice();
 
-		// Cost calculation for additional stuff in Large Pizza Only.
-		if (orderPizza.getPizzaSize().equalsIgnoreCase("Large")) {
-			this.totalAmountToPay += calcStuffCostLargePizza(orderPizza.getOrderAdditionalStuffList());
-		}
 		return PizzaShopUtils.SUCCESSFUL_OPERATION;
 	}
 
@@ -70,8 +84,11 @@ public class Order extends TackingInfo implements Serializable {
 	 * @return response whether operation is successfull or not.
 	 */
 	public String addSideBars(OrderSides orderSides) {
-		this.sideOrderList.add(orderSides);
-		this.totalAmountToPay += orderSides.getPrice();
+		if (orderSides.getOrderedQuantity() == 0) {
+			throw new RuntimeException(orderSides.getSideName() + " has been ordered with zero quantity.");
+		}
+		getSideOrderList().add(orderSides);
+		this.totalAmountToPay += (orderSides.getPrice() * orderSides.getOrderedQuantity());
 		return PizzaShopUtils.SUCCESSFUL_OPERATION;
 	}
 
@@ -82,54 +99,53 @@ public class Order extends TackingInfo implements Serializable {
 	 * @param orderPizza Pizza which will be validated before Order processing.
 	 * @return response whether operation is successfull or not.
 	 */
-	public String validatePizza(OrderPizza orderPizza, List<String> unavailableStuffNameList) {
+	public String validateRegularAndMediumPizza(OrderPizza orderPizza, List<String> unavailableStuffNameList) {
 		AtomicInteger nonVegToppingsCount = new AtomicInteger(0);
 		AtomicDouble totalStuffAmount = new AtomicDouble(0.0);
 
-		// Out of Stock Pizza can not be ordered
+		if (StringUtils.isEmpty(orderPizza.getOrderAdditionalStuffList())) {
+			return PizzaShopUtils.SUCCESSFUL_OPERATION;
+		}
+		// Out of Stock Additional Stuff can not be ordered
 		orderPizza.getOrderAdditionalStuffList().forEach(stuff -> {
-			if (unavailableStuffNameList.contains(stuff.getStuffName())) {
+			if (unavailableStuffNameList.size() != 0 && unavailableStuffNameList.contains(stuff.getStuffName())) {
 				throw new RuntimeException(stuff.getStuffName() + " is out of stock.");
+			}
+			if (stuff.getOrderedQuantity() == 0) {
+				throw new RuntimeException(stuff.getStuffName() + " has zero quantity ordered.");
 			}
 
 			// Cost Calculation for various Stuff corresponding to ordered Pizza which is
 			// not Large.
-			if (!orderPizza.getPizzaSize().equalsIgnoreCase("Large")) {
-				totalStuffAmount.addAndGet(stuff.getPrice());
-			}
+			totalStuffAmount.addAndGet(stuff.getPrice() * stuff.getOrderedQuantity());
 
 			// Vegetarian pizza Validations
-			if (orderPizza.getPizzaCategory().equalsIgnoreCase(PizzaInfoCategoryEnum.VEGETARIAN_PIZZA.toString())) {
+			if (orderPizza.getPizzaCategory().equalsIgnoreCase(PizzaInfoCategoryEnum.VEGETARIAN_PIZZA.getCategory())) {
 				// Vegetarian pizza cannot have a non-­vegetarian topping.
 				if (stuff.getStuffCategory()
-						.equalsIgnoreCase(AdditionalStuffCategoryEnum.NON_VEG_TOPPINGS.toString())) {
-					throw new RuntimeException("Vegetarian pizza cannot have a non-­vegetarian topping.");
+						.equalsIgnoreCase(AdditionalStuffCategoryEnum.NON_VEG_TOPPINGS.getCategory())) {
+					throw new RuntimeException("Vegetarian pizza cannot have a non-­vegetarian toppings.");
 				}
 
 			}
 
 			// Non Vegetarian pizza Validations
-			if (orderPizza.getPizzaCategory().equalsIgnoreCase(PizzaInfoCategoryEnum.NON_VEGETARIAN.toString())) {
+			if (orderPizza.getPizzaCategory().equalsIgnoreCase(PizzaInfoCategoryEnum.NON_VEGETARIAN.getCategory())) {
 				// Vegetarian pizza cannot have a non-­vegetarian topping.;
-				if (stuff.getStuffCategory().equalsIgnoreCase(AdditionalStuffCategoryEnum.VEG_TOPPINGS.toString())
+				if (stuff.getStuffCategory().equalsIgnoreCase(AdditionalStuffCategoryEnum.VEG_TOPPINGS.getCategory())
 						&& stuff.getStuffName().equalsIgnoreCase("Paneer")) {
-					throw new RuntimeException("Vegetarian pizza cannot have a non-­vegetarian topping.");
+					throw new RuntimeException("Non-­vegetarian pizza cannot have paneer toppings.");
 				}
+
 				// You can add only one of the non-­veg toppings in non-­vegetarian pizza.
 				if (stuff.getStuffCategory()
-						.equalsIgnoreCase(AdditionalStuffCategoryEnum.NON_VEG_TOPPINGS.toString())) {
+						.equalsIgnoreCase(AdditionalStuffCategoryEnum.NON_VEG_TOPPINGS.getCategory())) {
 
-					// For Large Size any two toppings is allowed and no cost would be added.
-					if (orderPizza.getPizzaSize().equalsIgnoreCase("Large")
-							&& nonVegToppingsCount.incrementAndGet() == 3) {
-						throw new RuntimeException(
-								"You can add only two of the non-­veg toppings in non-­vegetarian pizza.");
-					} else if (!orderPizza.getPizzaSize().equalsIgnoreCase("Large")
-							&& nonVegToppingsCount.incrementAndGet() == 2) {
+					// You can add only one of the non-­veg toppings in non-­vegetarian pizza.
+					if (nonVegToppingsCount.incrementAndGet() == 2) {
 						throw new RuntimeException(
 								"You can add only one of the non-­veg toppings in non-­vegetarian pizza.");
 					}
-
 				}
 			}
 
@@ -139,7 +155,59 @@ public class Order extends TackingInfo implements Serializable {
 	}
 
 	/**
+	 * 
+	 * @param orderPizza Pizza which has been ordered by Customer
+	 * @param unavailableStuffNameList List of Addition Stuff which are empty
+	 * @return response showing validation is successful or not. 
+	 */
+	public String validateLargePizza(OrderPizza orderPizza, List<String> unavailableStuffNameList) {
+		AtomicDouble totalStuffAmount = new AtomicDouble(0.0);
+
+		if (StringUtils.isEmpty(orderPizza.getOrderAdditionalStuffList())) {
+			return PizzaShopUtils.SUCCESSFUL_OPERATION;
+		}
+
+		// Decending order sort according to Stuff price
+		Collections.sort(orderPizza.getOrderAdditionalStuffList(), (x, y) -> {
+			return x.getPrice() < y.getPrice() ? 1 : -1;
+		});
+
+		//Veg Pizza validation
+		
+
+		// Out of Stock Additional Stuff can not be ordered
+		List<OrderAdditionalStuff> additionStuffList = orderPizza.getOrderAdditionalStuffList();
+		for (int i = 0; i < additionStuffList.size(); i++) {
+
+			// Non Vegetarian pizza Validations
+			if (orderPizza.getPizzaCategory().equalsIgnoreCase(PizzaInfoCategoryEnum.NON_VEGETARIAN.getCategory())) {
+				// Vegetarian pizza cannot have a non-­vegetarian topping.;
+				if (additionStuffList.get(i).getStuffCategory().equalsIgnoreCase(AdditionalStuffCategoryEnum.VEG_TOPPINGS.getCategory())
+						&& additionStuffList.get(i).getStuffName().equalsIgnoreCase("Paneer")) {
+					throw new RuntimeException("Non-­vegetarian pizza cannot have paneer toppings.");
+				}
+			}
+			//Cost would not be calculate for 1st two highest cost stuff.
+			if(i<2)continue;
+			
+			if (unavailableStuffNameList.size() != 0
+					&& unavailableStuffNameList.contains(additionStuffList.get(i).getStuffName())) {
+				throw new RuntimeException(additionStuffList.get(i).getStuffName() + " is out of stock.");
+			}
+			if (additionStuffList.get(i).getOrderedQuantity() == 0) {
+				throw new RuntimeException(additionStuffList.get(i).getStuffName() + " has zero quantity ordered.");
+			}
+
+			totalStuffAmount
+					.addAndGet(additionStuffList.get(i).getPrice() * additionStuffList.get(i).getOrderedQuantity());
+		}
+		this.totalAmountToPay += totalStuffAmount.get();
+		return PizzaShopUtils.SUCCESSFUL_OPERATION;
+	}
+
+	/**
 	 * This method calculate total cost of Addition Stuff for Large Pizza
+	 * 
 	 * @param orderAdditionalStuffList Additional Stuff eg. Toppings, Side bars
 	 * @return totalAmount
 	 */
@@ -156,15 +224,42 @@ public class Order extends TackingInfo implements Serializable {
 		return totalStuffCost;
 	}
 
-	public long getOrderId() {
+	public String getOrderId() {
 		return orderId;
 	}
 
-	public void setOrderId(long orderId) {
+	public void setOrderId(String orderId) {
 		this.orderId = orderId;
+	}
+	
+	public String getCustName() {
+		return custName;
+	}
+
+	public void setCustName(String custName) {
+		this.custName = custName;
+	}
+
+	public String getContactNumber() {
+		return contactNumber;
+	}
+
+	public void setContactNumber(String contactNumber) {
+		this.contactNumber = contactNumber;
+	}
+
+	public String getDeliveryAddress() {
+		return deliveryAddress;
+	}
+
+	public void setDeliveryAddress(String deliveryAddress) {
+		this.deliveryAddress = deliveryAddress;
 	}
 
 	public List<OrderPizza> getPizzaList() {
+		if (null == pizzaList) {
+			pizzaList = new ArrayList<>();
+		}
 		return pizzaList;
 	}
 
@@ -173,6 +268,9 @@ public class Order extends TackingInfo implements Serializable {
 	}
 
 	public List<OrderSides> getSideOrderList() {
+		if (null == sideOrderList) {
+			sideOrderList = new ArrayList<>();
+		}
 		return sideOrderList;
 	}
 
@@ -188,4 +286,11 @@ public class Order extends TackingInfo implements Serializable {
 		this.totalAmountToPay = totalAmountToPay;
 	}
 
+	@Override
+	public String toString() {
+		return "Order [orderId=" + orderId + ", custName=" + custName + ", contactNumber=" + contactNumber
+				+ ", deliveryAddress=" + deliveryAddress + ", pizzaList=" + pizzaList + ", sideOrderList="
+				+ sideOrderList + ", totalAmountToPay=" + totalAmountToPay + "]";
+	}
+	
 }

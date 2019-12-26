@@ -7,7 +7,6 @@ import org.innovect.assignment.dto.CustomerDashboardInfoDTO;
 import org.innovect.assignment.dto.PizzaInfoDTO;
 import org.innovect.assignment.dto.SubmitOrderPostDTO;
 import org.innovect.assignment.model.Order;
-import org.innovect.assignment.model.PizzaInfo;
 
 /**
  * @author Ashutosh Shukla
@@ -54,6 +53,11 @@ public interface PizzaFactory {
 	 * @return All Pizza from PizzaInfo table
 	 */
 	List<PizzaInfoDTO> getAllPizzInfoList();
+
+	/**
+	 * @return Additional Stuff Information for Pizza Shop
+	 */
+	List<AdditionalStuffInfoDTO> getAllStuffInfo();
 
 	
 }

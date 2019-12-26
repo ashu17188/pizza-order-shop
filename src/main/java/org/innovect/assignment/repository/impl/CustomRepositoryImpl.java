@@ -6,7 +6,6 @@ import javax.persistence.EntityManager;
 import javax.persistence.Query;
 
 import org.innovect.assignment.model.AdditionalStuffInfo;
-import org.innovect.assignment.model.PizzaInfo;
 import org.innovect.assignment.repository.CustomRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -44,31 +43,18 @@ public class CustomRepositoryImpl implements CustomRepository{
 			throw nre;
 		}
 	}
-
-	@Override
-	public List<PizzaInfo> findByPizzaNameList(List<String> pizzaNameList){
-		try {
-			Query query = em.createQuery(
-					"select distinct pi.* from PizzaInfo pi where pi.pizzaName in =: pizzaNameList");
-			query.setParameter("pizzaNameList", pizzaNameList);
-			return (List<PizzaInfo>) query.getResultList();
-		} catch (RuntimeException nre) {
-			log.error("No matching record found in database. ");
-			throw nre;
-		}
-	}
 	
 	@Override
-	public List<AdditionalStuffInfo> findByStuffNameList(List<String> stuffNameList){
+	public List<AdditionalStuffInfo> findByStuffNameList(List<String> stuffNameList) {
 		try {
 			Query query = em.createQuery(
-					"select distinct asi.stuffName from AdditionalStuffInfo asi where asi.stuffName =: stuffNameList");
+					"from AdditionalStuffInfo asi where asi.stuffName in (:stuffNameList)");
 			query.setParameter("stuffNameList", stuffNameList);
 			return (List<AdditionalStuffInfo>) query.getResultList();
 		} catch (RuntimeException nre) {
 			log.error("No matching record found in database. ");
 			throw nre;
 		}
-	}
+	} 
 
 }

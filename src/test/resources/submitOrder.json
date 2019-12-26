@@ -1,0 +1,79 @@
+{
+   "custName":"David Johnson",
+   "contactNumber":"+91-8989161123",
+   "deliveryAddress":"K-10, BINAWAT TOWNSHIP, HADAPSAR PUNE-411028(M.H)",
+   "orderPizzaDTOList":[
+      {
+         "pizzaName":"Deluxe Veggie",
+         "pizzaCategory":"Vegetarian",
+         "pizzaSize":"Regular",
+         "price":150.0,
+         "crust":"New hand tossed",
+         "orderAdditionalStuffList":[
+            {
+               "stuffName":"Black olive",
+               "stuffCategory":"Veg Toppings",
+               "price":20.0,
+               "orderedQuantity":2
+            },
+            {
+               "stuffName":"Paneer",
+               "stuffCategory":"Veg Toppings",
+               "price":35.0,
+               "orderedQuantity":2
+            },
+            {
+               "stuffName":"Extra cheese",
+               "stuffCategory":"miscellaneous",
+               "price":35.0,
+               "orderedQuantity":5
+            }
+         ]
+      },
+      {
+         "pizzaName":"Non-­Veg Supreme",
+         "pizzaCategory":"Non-Vegetarian",
+         "pizzaSize":"Large",
+         "price":425.0,
+         "crust":"New hand tossed",
+         "orderAdditionalStuffList":[
+            {
+               "stuffName":"Black olive",
+               "stuffCategory":"Veg Toppings",
+               "price":20.0,
+               "orderedQuantity":2
+            },
+            {
+               "stuffName":"Grilled chicken",
+               "stuffCategory":"Non-­Veg Toppings",
+               "price":40.0,
+               "orderedQuantity":5
+            },
+            {
+               "stuffName":"Grilled chicken",
+               "stuffCategory":"Non-­Veg Toppings",
+               "price":40.0,
+               "orderedQuantity":5
+            },
+            {
+               "stuffName":"Extra cheese",
+               "stuffCategory":"miscellaneous",
+               "price":35.0,
+               "orderedQuantity":5
+            }
+         ]
+      }
+   ],
+   "sideOrderList":[
+      {
+         "sideName":"Cold drink",
+         "price":55.0,
+         "orderedQuantity":5
+      },
+      {
+         "sideName":"Mousse cake",
+         "price":90.0,
+         "orderedQuantity":5
+      }
+   ]
+}

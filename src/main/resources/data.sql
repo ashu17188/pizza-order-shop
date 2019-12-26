@@ -31,20 +31,20 @@ insert into additional_stuff(`stuff_name`,`stuff_category`,`price`,`stock_quanti
 insert into additional_stuff(`stuff_name`,`stuff_category`,`price`,`stock_quantity`) values ('Fresh pan pizza','crust','0.0','10');
 
 /*insert veg toppings*/
-insert into additional_stuff(`stuff_name`,`stuff_category`,`price`,`stock_quantity`) values ('Black olive','Veg toppings','20.0','10');
-insert into additional_stuff(`stuff_name`,`stuff_category`,`price`,`stock_quantity`) values ('Capsicum ','Veg toppings','25.0','10');
-insert into additional_stuff(`stuff_name`,`stuff_category`,`price`,`stock_quantity`) values ('Paneer','Veg toppings','35.0','10');
-insert into additional_stuff(`stuff_name`,`stuff_category`,`price`,`stock_quantity`) values ('Mushroom','Veg toppings','30.0','10');
-insert into additional_stuff(`stuff_name`,`stuff_category`,`price`,`stock_quantity`) values ('Fresh tomato','Veg toppings','10.0','10');
+insert into additional_stuff(`stuff_name`,`stuff_category`,`price`,`stock_quantity`) values ('Black olive','Veg Toppings','20.0','40');
+insert into additional_stuff(`stuff_name`,`stuff_category`,`price`,`stock_quantity`) values ('Capsicum ','Veg Toppings','25.0','10');
+insert into additional_stuff(`stuff_name`,`stuff_category`,`price`,`stock_quantity`) values ('Paneer','Veg Toppings','35.0','20');
+insert into additional_stuff(`stuff_name`,`stuff_category`,`price`,`stock_quantity`) values ('Mushroom','Veg Toppings','30.0','10');
+insert into additional_stuff(`stuff_name`,`stuff_category`,`price`,`stock_quantity`) values ('Fresh tomato','Veg Toppings','10.0','10');
 
-/*insert non veg toppings*/
-insert into additional_stuff(`stuff_name`,`stuff_category`,`price`,`stock_quantity`) values ('Chicken tikka','Non-­Veg toppings','35.0','10');
-insert into additional_stuff(`stuff_name`,`stuff_category`,`price`,`stock_quantity`) values ('Barbeque chicken','Non-­Veg toppings','45.0','10');
-insert into additional_stuff(`stuff_name`,`stuff_category`,`price`,`stock_quantity`) values ('Grilled chicken','Non-­Veg toppings','40.0','10');
+/*insert non Veg Toppings*/
+insert into additional_stuff(`stuff_name`,`stuff_category`,`price`,`stock_quantity`) values ('Chicken tikka','Non-­Veg Toppings','35.0','10');
+insert into additional_stuff(`stuff_name`,`stuff_category`,`price`,`stock_quantity`) values ('Barbeque chicken','Non-­Veg Toppings','45.0','10');
+insert into additional_stuff(`stuff_name`,`stuff_category`,`price`,`stock_quantity`) values ('Grilled chicken','Non-­Veg Toppings','40.0','20');
 
 /*insert extra cheese*/
-insert into additional_stuff(`stuff_name`,`stuff_category`,`price`,`stock_quantity`) values ('Extra cheese','miscellaneous','40.0','10');
+insert into additional_stuff(`stuff_name`,`stuff_category`,`price`,`stock_quantity`) values ('Extra cheese','miscellaneous','35.0','30');
 
 /*insert sides*/
-insert into additional_stuff(`stuff_name`,`stuff_category`,`price`,`stock_quantity`) values ('Cold drink','sides','55.0','10');
-insert into additional_stuff(`stuff_name`,`stuff_category`,`price`,`stock_quantity`) values ('Mousse cake','sides','90.0','10');
+insert into additional_stuff(`stuff_name`,`stuff_category`,`price`,`stock_quantity`) values ('Cold drink','sides','55.0','50');
+insert into additional_stuff(`stuff_name`,`stuff_category`,`price`,`stock_quantity`) values ('Mousse cake','sides','90.0','50');

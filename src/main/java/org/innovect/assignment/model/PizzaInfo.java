@@ -98,4 +98,11 @@ public class PizzaInfo extends TackingInfo implements Serializable {
 		this.stockQuantity = stockQuantity;
 	}
 
+	@Override
+	public String toString() {
+		return "PizzaInfo [pizzaInfoId=" + pizzaInfoId + ", pizzaName=" + pizzaName + ", pizzaCategory=" + pizzaCategory
+				+ ", pizzaSize=" + pizzaSize + ", price=" + price + ", stockQuantity=" + stockQuantity + "]";
+	}
+	
+
 }

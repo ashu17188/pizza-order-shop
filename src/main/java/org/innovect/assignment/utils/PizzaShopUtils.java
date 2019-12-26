@@ -6,4 +6,5 @@ public interface PizzaShopUtils {
 	
 	public static final String SUCCESSFUL_ORDER_SUBMIT_OPERATION="Order Confirmed.";
 
+	public static final String LARGE_PIZZA ="Large";
 }

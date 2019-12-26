@@ -1,0 +1,10 @@
+[
+   {
+      "pizzaInfoId":0,
+      "pizzaName":"Test Pizza",
+      "pizzaCategory":"Vegetarian",
+      "pizzaSize":"Regular",
+      "price":505.0,
+      "stockQuantity":10
+   }
+]

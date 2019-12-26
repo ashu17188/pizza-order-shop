@@ -4,18 +4,26 @@ import java.io.Serializable;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import org.hibernate.annotations.GenericGenerator;
+
 @Entity
 @Table(name = "order_additional_stuff")
-public class OrderAdditionalStuff extends TackingInfo implements Serializable{
+public class OrderAdditionalStuff extends TackingInfo implements Serializable {
 
 	private static final long serialVersionUID = -121078458244400882L;
 
 	@Id
+	@GeneratedValue(generator = "UUID")
+	@GenericGenerator(name = "UUID", strategy = "org.hibernate.id.UUIDGenerator")
+	@Column(name = "order_stuff_id", updatable = false, nullable = false)
+	private String orderStuffId;
+
 	@Column(name = "stuff_name")
 	private String stuffName;
 
@@ -29,9 +37,17 @@ public class OrderAdditionalStuff extends TackingInfo implements Serializable{
 	private long orderedQuantity;
 
 	@ManyToOne
-	@JoinColumn(name = "pizza_name", insertable = false, updatable = false, nullable = true)
+	@JoinColumn(name = "order_pizza_id", insertable = false, updatable = false, nullable = true)
 	private OrderPizza orderPizza;
-	
+
+	public String getOrderStuffId() {
+		return orderStuffId;
+	}
+
+	public void setOrderStuffId(String orderStuffId) {
+		this.orderStuffId = orderStuffId;
+	}
+
 	public String getStuffName() {
 		return stuffName;
 	}
@@ -71,5 +87,11 @@ public class OrderAdditionalStuff extends TackingInfo implements Serializable{
 	public void setOrderPizza(OrderPizza orderPizza) {
 		this.orderPizza = orderPizza;
 	}
-	
+
+	@Override
+	public String toString() {
+		return "OrderAdditionalStuff [orderStuffId=" + orderStuffId + ", stuffName=" + stuffName + ", stuffCategory="
+				+ stuffCategory + ", price=" + price + ", orderedQuantity=" + orderedQuantity + ", orderPizza="
+				+ orderPizza + "]";
+	}
 }

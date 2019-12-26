@@ -10,6 +10,16 @@ public class OrderAdditionalStuffDTO {
 
 	private long orderedQuantity;
 
+	public OrderAdditionalStuffDTO() {}
+	
+	public OrderAdditionalStuffDTO(String stuffName, String stuffCategory, double price, long orderedQuantity) {
+		super();
+		this.stuffName = stuffName;
+		this.stuffCategory = stuffCategory;
+		this.price = price;
+		this.orderedQuantity = orderedQuantity;
+	}
+
 	public String getStuffName() {
 		return stuffName;
 	}
@@ -42,5 +52,9 @@ public class OrderAdditionalStuffDTO {
 		this.orderedQuantity = orderedQuantity;
 	}
 
-	
+	@Override
+	public String toString() {
+		return "OrderAdditionalStuffDTO [stuffName=" + stuffName + ", stuffCategory=" + stuffCategory + ", price="
+				+ price + ", orderedQuantity=" + orderedQuantity + "]";
+	}
 }
