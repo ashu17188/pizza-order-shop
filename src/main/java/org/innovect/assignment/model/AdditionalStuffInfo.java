@@ -32,6 +32,14 @@ public class AdditionalStuffInfo extends TackingInfo implements Serializable {
 	public AdditionalStuffInfo() {
 	}
 
+	public AdditionalStuffInfo(String stuffName, String stuffCategory, double price, long stockQuantity) {
+		super();
+		this.stuffName = stuffName;
+		this.stuffCategory = stuffCategory;
+		this.price = price;
+		this.stockQuantity = stockQuantity;
+	}
+
 	public String getStuffName() {
 		return stuffName;
 	}

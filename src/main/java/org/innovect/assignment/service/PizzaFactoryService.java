@@ -95,7 +95,7 @@ public class PizzaFactoryService implements PizzaFactory {
 			List<String> unavailableStuffNameList = customRepository.getAdditionalStuffAvailability();
 
 			for (OrderPizza orderPizza : orderPizzaList) {
-				if (unavailablePizzaNameList.size() != 0
+				if (null != unavailablePizzaNameList && unavailablePizzaNameList.size() != 0
 						&& unavailablePizzaNameList.contains(orderPizza.getPizzaName())) {
 					throw new RuntimeException(orderPizza.getPizzaName() + " is out of stock.");
 				}
@@ -103,7 +103,7 @@ public class PizzaFactoryService implements PizzaFactory {
 			}
 			if (!StringUtils.isEmpty(orderSidesList)) {
 				for (OrderSides orderSides : orderSidesList) {
-					if (unavailableStuffNameList.size() != 0
+					if (null != unavailableStuffNameList && unavailableStuffNameList.size() != 0
 							&& unavailableStuffNameList.contains(orderSides.getSideName())) {
 						throw new RuntimeException(orderSides.getSideName() + " is out of stock.");
 
@@ -178,10 +178,11 @@ public class PizzaFactoryService implements PizzaFactory {
 		for (OrderPizza orderPizza : orderPizzaList) {
 			PizzaInfo pizzaInfoFrmDB = pizzaInfoRepository.findByPizzaNameAndPizzaSize(orderPizza.getPizzaName(),
 					orderPizza.getPizzaSize());
-			pizzaInfoFrmDB.setStockQuantity(pizzaInfoFrmDB.getStockQuantity() - 1);
-			pizzaInfoList.add(pizzaInfoFrmDB);
-			this.updateStockAdditionalStuffInventory(orderPizza.getOrderAdditionalStuffList(), null);
-
+			if (null != pizzaInfoFrmDB) {
+				pizzaInfoFrmDB.setStockQuantity(pizzaInfoFrmDB.getStockQuantity() - 1);
+				pizzaInfoList.add(pizzaInfoFrmDB);
+				this.updateStockAdditionalStuffInventory(orderPizza.getOrderAdditionalStuffList(), null);
+			}
 		}
 		pizzaInfoRepository.saveAll(pizzaInfoList);
 
@@ -252,7 +253,8 @@ public class PizzaFactoryService implements PizzaFactory {
 				if (obj instanceof OrderAdditionalStuff) {
 					OrderAdditionalStuff orderAdditionalStuff = (OrderAdditionalStuff) obj;
 					if (additionalStuffInfo.getStockQuantity() - orderAdditionalStuff.getOrderedQuantity() < 0) {
-						throw new RuntimeException(orderAdditionalStuff.getStuffName()+", "+ orderAdditionalStuff.getStuffCategory() + " stock is not sufficient.");
+						throw new RuntimeException(orderAdditionalStuff.getStuffName() + ", "
+								+ orderAdditionalStuff.getStuffCategory() + " stock is not sufficient.");
 					}
 					additionalStuffInfo.setStockQuantity(
 							additionalStuffInfo.getStockQuantity() - orderAdditionalStuff.getOrderedQuantity());

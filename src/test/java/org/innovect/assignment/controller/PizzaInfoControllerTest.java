@@ -26,7 +26,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import com.google.gson.Gson;
 
 /**
- * This class contains only basic test cases. For detailed test scenarios and
+ * This class contains basic test cases. For detailed test scenarios and
  * business rules validation, please visits PizzaFactoryServiceTest.java
  * 
  * @author Ashutosh Shukla

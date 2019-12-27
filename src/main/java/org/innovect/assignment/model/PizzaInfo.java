@@ -41,12 +41,13 @@ public class PizzaInfo extends TackingInfo implements Serializable {
 	public PizzaInfo() {
 	}
 
-	public PizzaInfo(String pizzaName, String pizzaCategory, double price, long stockQuantity) {
+	public PizzaInfo(String pizzaName, String pizzaCategory,String pizzaSize, double price, long stockQuantity) {
 		super();
 		this.pizzaName = pizzaName;
 		this.pizzaCategory = pizzaCategory;
 		this.price = price;
 		this.stockQuantity = stockQuantity;
+		this.pizzaSize =pizzaSize;
 	}
 
 	
