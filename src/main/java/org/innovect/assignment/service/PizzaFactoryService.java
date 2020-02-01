@@ -22,7 +22,7 @@ import org.innovect.assignment.repository.AdditionalStuffRepository;
 import org.innovect.assignment.repository.CustomRepository;
 import org.innovect.assignment.repository.OrderRepository;
 import org.innovect.assignment.repository.PizzaInfoRepository;
-import org.innovect.assignment.utils.PizzaShopUtils;
+import org.innovect.assignment.utils.PizzaShopConstants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -136,40 +136,7 @@ public class PizzaFactoryService implements PizzaFactory {
 		} catch (RuntimeException e) {
 			throw e;
 		}
-		return PizzaShopUtils.SUCCESSFUL_ORDER_SUBMIT_OPERATION;
-	}
-
-	@Override
-	public List<PizzaInfoDTO> getAllPizzInfoList() {
-		return new Gson().fromJson(new Gson().toJson(pizzaInfoRepository.findAll()),
-				new TypeToken<ArrayList<PizzaInfoDTO>>() {
-				}.getType());
-	}
-
-	@Override
-	public String addPizzaInfoInventory(List<PizzaInfoDTO> pizzaInfoDTOList) {
-		if (pizzaInfoDTOList.size() == 0) {
-			throw new IllegalArgumentException("Pizza list can not be empty.");
-		}
-		List<PizzaInfo> pizzaInfoList = new ArrayList<>();
-		for (PizzaInfoDTO pizzaInfoDTO : pizzaInfoDTOList) {
-			PizzaInfo pizzaInfoDB = pizzaInfoRepository.findByPizzaNameAndPizzaSize(pizzaInfoDTO.getPizzaName(),
-					pizzaInfoDTO.getPizzaSize());
-			if (!StringUtils.isEmpty(pizzaInfoDB)) {
-				pizzaInfoDB.setStockQuantity(pizzaInfoDTO.getStockQuantity());
-				pizzaInfoDB.setPrice(pizzaInfoDTO.getPrice());
-				pizzaInfoDB.setPizzaCategory(pizzaInfoDTO.getPizzaCategory());
-				pizzaInfoDB.setPizzaSize(pizzaInfoDTO.getPizzaSize());
-				pizzaInfoDB.setPizzaName(pizzaInfoDTO.getPizzaName());
-				pizzaInfoList.add(pizzaInfoDB);
-			} else {
-				PizzaInfo newPizzaObj = new Gson().fromJson(new Gson().toJson(pizzaInfoDTO), PizzaInfo.class);
-				pizzaInfoList.add(newPizzaObj);
-			}
-		}
-		pizzaInfoRepository.saveAll(pizzaInfoList);
-
-		return PizzaShopUtils.SUCCESSFUL_OPERATION;
+		return PizzaShopConstants.SUCCESSFUL_ORDER_SUBMIT_OPERATION;
 	}
 
 	private String updateStockPizzaInfoInventory(List<OrderPizza> orderPizzaList) {
@@ -186,39 +153,16 @@ public class PizzaFactoryService implements PizzaFactory {
 		}
 		pizzaInfoRepository.saveAll(pizzaInfoList);
 
-		return PizzaShopUtils.SUCCESSFUL_OPERATION;
-	}
-
-	@Override
-	public String addAdditionalStuffInventory(List<AdditionalStuffInfoDTO> additionalStuffInfoDTOList) {
-		if (additionalStuffInfoDTOList.size() == 0) {
-			throw new IllegalArgumentException("Stuff List can not be empty.");
-		}
-		List<AdditionalStuffInfo> additionalStuffInfoList = new ArrayList<>();
-		for (AdditionalStuffInfoDTO additionalStuffInfoDTO : additionalStuffInfoDTOList) {
-			AdditionalStuffInfo stuffObjFrmDB = additionalStuffRepository
-					.findByStuffName(additionalStuffInfoDTO.getStuffName());
-			if (!StringUtils.isEmpty(stuffObjFrmDB)) {
-				stuffObjFrmDB.setPrice(additionalStuffInfoDTO.getPrice());
-				stuffObjFrmDB.setStockQuantity(additionalStuffInfoDTO.getStockQuantity());
-				stuffObjFrmDB.setStuffCategory(additionalStuffInfoDTO.getStuffCategory());
-				additionalStuffInfoList.add(stuffObjFrmDB);
-			} else {
-				AdditionalStuffInfo additionalStuffInfo = new Gson().fromJson(new Gson().toJson(additionalStuffInfoDTO),
-						AdditionalStuffInfo.class);
-				additionalStuffInfoList.add(additionalStuffInfo);
-			}
-		}
-
-		additionalStuffRepository.saveAll(additionalStuffInfoList);
-		return PizzaShopUtils.SUCCESSFUL_OPERATION;
+		return PizzaShopConstants.SUCCESSFUL_OPERATION;
 	}
 
 	/**
-	 * This method is 
+	 * This method is
+	 * 
 	 * @param orderAdditionalStuffList additional stuff passed during order submit.
-	 * @param orderSidesList side list passed during order submit.
-	 * @return SUCCESSFUL if after order processing inventory is successfully updated.
+	 * @param orderSidesList           side list passed during order submit.
+	 * @return SUCCESSFUL if after order processing inventory is successfully
+	 *         updated.
 	 */
 	private String updateStockAdditionalStuffInventory(List<OrderAdditionalStuff> orderAdditionalStuffList,
 			List<OrderSides> orderSidesList) {
@@ -279,15 +223,7 @@ public class PizzaFactoryService implements PizzaFactory {
 
 		additionalStuffRepository.saveAll(additionalStuffInfoList);
 
-		return PizzaShopUtils.SUCCESSFUL_OPERATION;
+		return PizzaShopConstants.SUCCESSFUL_OPERATION;
 	}
 
-	@Override
-	public List<AdditionalStuffInfoDTO> getAllStuffInfo() {
-		List<AdditionalStuffInfoDTO> stuffList = new Gson().fromJson(
-				new Gson().toJson(additionalStuffRepository.findAll()),
-				new TypeToken<ArrayList<AdditionalStuffInfoDTO>>() {
-				}.getType());
-		return stuffList;
-	}
 }

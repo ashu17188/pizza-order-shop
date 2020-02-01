@@ -1,6 +1,6 @@
 package org.innovect.assignment.utils;
 
-public class PizzaShopUtils {
+public final class PizzaShopConstants {
 
 	public static final String SUCCESSFUL_OPERATION = "SUCCESSFUL";
 

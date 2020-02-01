@@ -31,7 +31,7 @@ import org.innovect.assignment.repository.AdditionalStuffRepository;
 import org.innovect.assignment.repository.CustomRepository;
 import org.innovect.assignment.repository.OrderRepository;
 import org.innovect.assignment.repository.PizzaInfoRepository;
-import org.innovect.assignment.utils.PizzaShopUtils;
+import org.innovect.assignment.utils.PizzaShopConstants;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -145,73 +145,9 @@ public class PizzaFactoryServiceUnitTest {
 		when(pizzaInfoRepository.findByPizzaNameAndPizzaSize("Deluxe Veggie", "Regular")).thenReturn(pizzaInfo);
 
 		String response = pizzaFactory.submitOrder(submitOrderPostDTO);
-		Assert.assertEquals(response, PizzaShopUtils.SUCCESSFUL_ORDER_SUBMIT_OPERATION);
+		Assert.assertEquals(response, PizzaShopConstants.SUCCESSFUL_ORDER_SUBMIT_OPERATION);
 	}
 
-	/**
-	 * Add Pizza to inventory
-	 */
-	@Test
-	public void addPizzaInfoTest() {
-		List<PizzaInfoDTO> pizzaInfoList = new ArrayList<>();
-		PizzaInfoDTO pizzaInfoDTO = new PizzaInfoDTO(0, "Deluxe Veggie",
-				PizzaInfoCategoryEnum.VEGETARIAN_PIZZA.getCategory(), "Regular", 1001.00, 20);
-		pizzaInfoList.add(pizzaInfoDTO);
-		String response = pizzaFactory.addPizzaInfoInventory(pizzaInfoList);
-		Assert.assertEquals(response, PizzaShopUtils.SUCCESSFUL_OPERATION);
-
-	}
-
-	/**
-	 * Update Pizza information present in inventory.
-	 */
-	@Test
-	public void updatePizzaInfoTest() {
-		List<PizzaInfoDTO> pizzaInfoList = new ArrayList<>();
-		PizzaInfoDTO pizzaInfoDTO = new PizzaInfoDTO(0, "Test Pizza", PizzaInfoCategoryEnum.VEGETARIAN_PIZZA.getCategory(),
-				"Regular", 505.00, 10);
-		pizzaInfoList.add(pizzaInfoDTO);
-
-		PizzaInfo pizzaInfo = new PizzaInfo("Test Pizza", PizzaInfoCategoryEnum.VEGETARIAN_PIZZA.getCategory(),
-				"Regular", 150.00, 10);
-		when(pizzaInfoRepository.findByPizzaNameAndPizzaSize("Test Pizza", "Regular")).thenReturn(pizzaInfo);
-		String response = pizzaFactory.addPizzaInfoInventory(pizzaInfoList);
-		Assert.assertEquals(response, PizzaShopUtils.SUCCESSFUL_OPERATION);
-	}
-
-	/**
-	 * Add Addition Stuff of various category eg Veg Toppings, miscellaneous, sides
-	 * etc.
-	 */
-	@Test
-	public void addAdditionalStuffTest() {
-		List<AdditionalStuffInfoDTO> additionalStuffDTOList = new ArrayList<>();
-		AdditionalStuffInfoDTO additionalStuffInfoDTO = new AdditionalStuffInfoDTO("Chicken tikka",
-				AdditionalStuffCategoryEnum.NON_VEG_TOPPINGS.getCategory(), 40.00, 40);
-		additionalStuffDTOList.add(additionalStuffInfoDTO);
-		String response = pizzaFactory.addAdditionalStuffInventory(additionalStuffDTOList);
-		Assert.assertEquals(response, PizzaShopUtils.SUCCESSFUL_OPERATION);
-
-	}
-
-	/**
-	 * Update information of Additional Stuff (eg. Veg Toppings, sides etc) in
-	 * inventory
-	 */
-	@Test
-	public void updateAdditionalStuffTest() {
-		List<AdditionalStuffInfoDTO> additionalStuffDTOList = new ArrayList<>();
-		AdditionalStuffInfoDTO additionalStuffInfoDTO = new AdditionalStuffInfoDTO("Test Stuff",
-				AdditionalStuffCategoryEnum.VEG_TOPPINGS.getCategory(), 39.00, 50);
-		additionalStuffDTOList.add(additionalStuffInfoDTO);
-		
-		AdditionalStuffInfo stuff =new AdditionalStuffInfo("Test Stuff",AdditionalStuffCategoryEnum.VEG_TOPPINGS.getCategory(), 50.00, 100);
-		when(additionalStuffRepository
-					.findByStuffName(additionalStuffInfoDTO.getStuffName())).thenReturn(stuff);
-		String response = pizzaFactory.addAdditionalStuffInventory(additionalStuffDTOList);
-		Assert.assertEquals(response, PizzaShopUtils.SUCCESSFUL_OPERATION);
-
-	}
 
 	/**
 	 * Vegetarian pizza cannot have a non-­vegetarian topping.
@@ -292,7 +228,7 @@ public class PizzaFactoryServiceUnitTest {
 		when(customRepository.getAdditionalStuffAvailability()).thenReturn(new ArrayList<String>());
 
 		String response = pizzaFactory.submitOrder(submitOrderPostDTO);
-		Assert.assertNotNull(response, PizzaShopUtils.SUCCESSFUL_ORDER_SUBMIT_OPERATION);
+		Assert.assertNotNull(response, PizzaShopConstants.SUCCESSFUL_ORDER_SUBMIT_OPERATION);
 	}
 
 	/*
@@ -305,7 +241,7 @@ public class PizzaFactoryServiceUnitTest {
 		when(customRepository.getAdditionalStuffAvailability()).thenReturn(new ArrayList<String>());
 
 		String response = pizzaFactory.submitOrder(submitOrderPostDTO);
-		Assert.assertNotNull(response, PizzaShopUtils.SUCCESSFUL_ORDER_SUBMIT_OPERATION);
+		Assert.assertNotNull(response, PizzaShopConstants.SUCCESSFUL_ORDER_SUBMIT_OPERATION);
 	}
 
 	/**
@@ -320,7 +256,7 @@ public class PizzaFactoryServiceUnitTest {
 
 		SubmitOrderPostDTO submitOrderPostDTO = OutOfStockPizzaOrderData.createSubmitOrderPostDTOObject();
 		String response = pizzaFactory.submitOrder(submitOrderPostDTO);
-		Assert.assertEquals(response, PizzaShopUtils.SUCCESSFUL_ORDER_SUBMIT_OPERATION);
+		Assert.assertEquals(response, PizzaShopConstants.SUCCESSFUL_ORDER_SUBMIT_OPERATION);
 
 	}
 
@@ -336,7 +272,7 @@ public class PizzaFactoryServiceUnitTest {
 
 		SubmitOrderPostDTO submitOrderPostDTO = OutOfStockAdditionalStuffOrderData.createSubmitOrderPostDTOObject();
 		String response = pizzaFactory.submitOrder(submitOrderPostDTO);
-		Assert.assertEquals(response, PizzaShopUtils.SUCCESSFUL_ORDER_SUBMIT_OPERATION);
+		Assert.assertEquals(response, PizzaShopConstants.SUCCESSFUL_ORDER_SUBMIT_OPERATION);
 
 	}
 
@@ -352,7 +288,7 @@ public class PizzaFactoryServiceUnitTest {
 
 		SubmitOrderPostDTO submitOrderPostDTO = OutOfStockSidesOrderData.createSubmitOrderPostDTOObject();
 		String response = pizzaFactory.submitOrder(submitOrderPostDTO);
-		Assert.assertEquals(response, PizzaShopUtils.SUCCESSFUL_ORDER_SUBMIT_OPERATION);
+		Assert.assertEquals(response, PizzaShopConstants.SUCCESSFUL_ORDER_SUBMIT_OPERATION);
 	}
 
 }

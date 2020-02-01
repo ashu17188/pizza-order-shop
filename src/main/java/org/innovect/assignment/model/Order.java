@@ -15,7 +15,7 @@ import javax.persistence.Table;
 
 import org.hibernate.annotations.GenericGenerator;
 import org.innovect.assignment.pizza.validation.PizzaInfoStrategy;
-import org.innovect.assignment.utils.PizzaShopUtils;
+import org.innovect.assignment.utils.PizzaShopConstants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 
@@ -73,10 +73,10 @@ public class Order extends TackingInfo implements Serializable {
 	public String addPizza(OrderPizza orderPizza, List<String> unavailableStuffName) {
 		String validationResponse = "";
 		
-		if (orderPizza.getPizzaSize().equals(PizzaShopUtils.LARGE_PIZZA)) {
+		if (orderPizza.getPizzaSize().equals(PizzaShopConstants.LARGE_PIZZA)) {
 			validationResponse = largePizzaInfo.validatePizza(orderPizza, unavailableStuffName);
 			this.totalAmountToPay += largePizzaInfo.calculateAdditionalCost(orderPizza, unavailableStuffName);
-		} else if(orderPizza.getPizzaSize().equals(PizzaShopUtils.MEDIUM_PIZZA)){
+		} else if(orderPizza.getPizzaSize().equals(PizzaShopConstants.MEDIUM_PIZZA)){
 			validationResponse = mediumPizzaInfo.validatePizza(orderPizza, unavailableStuffName);
 			this.totalAmountToPay += mediumPizzaInfo.calculateAdditionalCost(orderPizza, unavailableStuffName);
 
@@ -86,13 +86,13 @@ public class Order extends TackingInfo implements Serializable {
 
 		}
 
-		if (!PizzaShopUtils.SUCCESSFUL_OPERATION.equalsIgnoreCase(validationResponse)) {
+		if (!PizzaShopConstants.SUCCESSFUL_OPERATION.equalsIgnoreCase(validationResponse)) {
 			throw new RuntimeException(validationResponse);
 		}
 		getPizzaList().add(orderPizza);
 		this.totalAmountToPay += orderPizza.getPrice();
 
-		return PizzaShopUtils.SUCCESSFUL_OPERATION;
+		return PizzaShopConstants.SUCCESSFUL_OPERATION;
 	}
 
 	/**
@@ -107,7 +107,7 @@ public class Order extends TackingInfo implements Serializable {
 		}
 		getSideOrderList().add(orderSides);
 		this.totalAmountToPay += (orderSides.getPrice() * orderSides.getOrderedQuantity());
-		return PizzaShopUtils.SUCCESSFUL_OPERATION;
+		return PizzaShopConstants.SUCCESSFUL_OPERATION;
 	}
 
 	public String getOrderId() {

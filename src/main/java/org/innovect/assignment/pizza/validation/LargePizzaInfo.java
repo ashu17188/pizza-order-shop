@@ -7,7 +7,7 @@ import org.innovect.assignment.model.AdditionalStuffCategoryEnum;
 import org.innovect.assignment.model.OrderAdditionalStuff;
 import org.innovect.assignment.model.OrderPizza;
 import org.innovect.assignment.model.PizzaInfoCategoryEnum;
-import org.innovect.assignment.utils.PizzaShopUtils;
+import org.innovect.assignment.utils.PizzaShopConstants;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
@@ -26,7 +26,7 @@ public class LargePizzaInfo implements PizzaInfoStrategy {
 	public String validatePizza(OrderPizza orderPizza, List<String> unavailableStuffNameList) {
 
 		if (StringUtils.isEmpty(orderPizza.getOrderAdditionalStuffList())) {
-			return PizzaShopUtils.SUCCESSFUL_OPERATION;
+			return PizzaShopConstants.SUCCESSFUL_OPERATION;
 		}
 
 		// Decending order sort according to Stuff price
@@ -50,7 +50,7 @@ public class LargePizzaInfo implements PizzaInfoStrategy {
 				}
 			}
 		}
-		return PizzaShopUtils.SUCCESSFUL_OPERATION;
+		return PizzaShopConstants.SUCCESSFUL_OPERATION;
 	}
 
 	/**

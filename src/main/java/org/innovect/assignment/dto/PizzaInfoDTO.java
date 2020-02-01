@@ -1,17 +1,26 @@
 package org.innovect.assignment.dto;
 
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
+
 public class PizzaInfoDTO {
 
 	private int pizzaInfoId;
 
+	@NotEmpty(message="Pizza name is required.")
 	private String pizzaName;
 
+	@NotEmpty(message="Pizza Category is required.")
 	private String pizzaCategory;
 
+	@NotEmpty(message="Pizza size is required.")
 	private String pizzaSize;
 
+	@Size(min = 1, max = 2000, message = "Pizza price should be between 1 and 2000.")
 	private double price;
 
+	@Size(min = 10, max = 200, message = "About Me must be between 1 and 1000 characters")
 	private long stockQuantity;
 
 	public PizzaInfoDTO(){}

@@ -6,7 +6,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import org.innovect.assignment.model.AdditionalStuffCategoryEnum;
 import org.innovect.assignment.model.OrderPizza;
 import org.innovect.assignment.model.PizzaInfoCategoryEnum;
-import org.innovect.assignment.utils.PizzaShopUtils;
+import org.innovect.assignment.utils.PizzaShopConstants;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
@@ -27,7 +27,7 @@ public class RegularPizzaInfo implements PizzaInfoStrategy {
 		AtomicDouble totalStuffAmount = new AtomicDouble(0.0);
 
 		if (StringUtils.isEmpty(orderPizza.getOrderAdditionalStuffList())) {
-			return PizzaShopUtils.SUCCESSFUL_OPERATION;
+			return PizzaShopConstants.SUCCESSFUL_OPERATION;
 		}
 		// Out of Stock Additional Stuff can not be ordered
 		orderPizza.getOrderAdditionalStuffList().forEach(stuff -> {
@@ -65,7 +65,7 @@ public class RegularPizzaInfo implements PizzaInfoStrategy {
 						.equalsIgnoreCase(AdditionalStuffCategoryEnum.NON_VEG_TOPPINGS.getCategory())) {
 
 					// You can add only one of the non-­veg toppings in non-­vegetarian pizza.
-					if (nonVegToppingsCount.incrementAndGet() == PizzaShopUtils.MAX_TOPPINGS) {
+					if (nonVegToppingsCount.incrementAndGet() == PizzaShopConstants.MAX_TOPPINGS) {
 						throw new RuntimeException(
 								"You can add only one of the non-­veg toppings in non-­vegetarian pizza.");
 					}
@@ -73,7 +73,7 @@ public class RegularPizzaInfo implements PizzaInfoStrategy {
 			}
 
 		});
-		return PizzaShopUtils.SUCCESSFUL_OPERATION;
+		return PizzaShopConstants.SUCCESSFUL_OPERATION;
 	}
 
 	@Override
