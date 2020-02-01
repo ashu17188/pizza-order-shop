@@ -172,7 +172,7 @@ public class PizzaFactoryService implements PizzaFactory {
 		return PizzaShopUtils.SUCCESSFUL_OPERATION;
 	}
 
-	public String updateStockPizzaInfoInventory(List<OrderPizza> orderPizzaList) {
+	private String updateStockPizzaInfoInventory(List<OrderPizza> orderPizzaList) {
 		List<PizzaInfo> pizzaInfoList = new ArrayList<>();
 
 		for (OrderPizza orderPizza : orderPizzaList) {
@@ -214,7 +214,13 @@ public class PizzaFactoryService implements PizzaFactory {
 		return PizzaShopUtils.SUCCESSFUL_OPERATION;
 	}
 
-	public String updateStockAdditionalStuffInventory(List<OrderAdditionalStuff> orderAdditionalStuffList,
+	/**
+	 * This method is 
+	 * @param orderAdditionalStuffList additional stuff passed during order submit.
+	 * @param orderSidesList side list passed during order submit.
+	 * @return SUCCESSFUL if after order processing inventory is successfully updated.
+	 */
+	private String updateStockAdditionalStuffInventory(List<OrderAdditionalStuff> orderAdditionalStuffList,
 			List<OrderSides> orderSidesList) {
 		if (StringUtils.isEmpty(orderAdditionalStuffList) && StringUtils.isEmpty(orderSidesList)) {
 			return "";
@@ -284,10 +290,4 @@ public class PizzaFactoryService implements PizzaFactory {
 				}.getType());
 		return stuffList;
 	}
-	/*
-	 * // method needs to be removed. Added Just for testing
-	 * 
-	 * @Override public List<Order> findAllOrders() { return
-	 * orderRepository.findAll(); }
-	 */
 }

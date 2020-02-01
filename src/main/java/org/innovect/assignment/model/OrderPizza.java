@@ -123,5 +123,4 @@ public class OrderPizza extends TackingInfo implements Serializable {
 				+ ", pizzaSize=" + pizzaSize + ", price=" + price + ", crust=" + crust + ", order=" + order
 				+ ", orderAdditionalStuffList=" + orderAdditionalStuffList + "]";
 	}
-	
 }
