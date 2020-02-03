@@ -112,9 +112,9 @@ public class PizzaFactoryServiceTest {
 	@Test
 	public void submitNormalOrderTest() {
 		SubmitOrderPostDTO submitOrderPostDTO = NormalOrderData.createSubmitOrderPostDTOObject();
-		String response = pizzaFactory.submitOrder(submitOrderPostDTO);
+		SubmitOrderPostDTO response = pizzaFactory.submitOrder(submitOrderPostDTO);
 
-		Assert.assertEquals(response, PizzaShopConstants.SUCCESSFUL_ORDER_SUBMIT_OPERATION);
+		Assert.assertEquals(response, submitOrderPostDTO);
 	}
 
 	/**
@@ -179,8 +179,8 @@ public class PizzaFactoryServiceTest {
 	@Test
 	public void zeroAdditionalStuffOrderTest() {
 		SubmitOrderPostDTO submitOrderPostDTO = ZeroAdditionalStuffOrderData.createSubmitOrderPostDTOObject();
-		String response = pizzaFactory.submitOrder(submitOrderPostDTO);
-		Assert.assertNotNull(response, PizzaShopConstants.SUCCESSFUL_ORDER_SUBMIT_OPERATION);
+		SubmitOrderPostDTO response = pizzaFactory.submitOrder(submitOrderPostDTO);
+		Assert.assertEquals(response, submitOrderPostDTO);
 	}
 
 	/*
@@ -189,8 +189,8 @@ public class PizzaFactoryServiceTest {
 	@Test
 	public void zeroSidesOrderTest() {
 		SubmitOrderPostDTO submitOrderPostDTO = ZeroSidesOrderData.createSubmitOrderPostDTOObject();
-		String response = pizzaFactory.submitOrder(submitOrderPostDTO);
-		Assert.assertNotNull(response, PizzaShopConstants.SUCCESSFUL_ORDER_SUBMIT_OPERATION);
+		SubmitOrderPostDTO response = pizzaFactory.submitOrder(submitOrderPostDTO);
+		Assert.assertEquals(response, submitOrderPostDTO);
 	}
 
 	/**
@@ -206,8 +206,8 @@ public class PizzaFactoryServiceTest {
 		Assert.assertEquals(responsePizzaAddition, PizzaShopConstants.SUCCESSFUL_OPERATION);
 
 		SubmitOrderPostDTO submitOrderPostDTO = OutOfStockPizzaOrderData.createSubmitOrderPostDTOObject();
-		String response = pizzaFactory.submitOrder(submitOrderPostDTO);
-		Assert.assertEquals(response, PizzaShopConstants.SUCCESSFUL_ORDER_SUBMIT_OPERATION);
+		SubmitOrderPostDTO response = pizzaFactory.submitOrder(submitOrderPostDTO);
+		Assert.assertEquals(submitOrderPostDTO, response);
 
 	}
 
@@ -224,8 +224,8 @@ public class PizzaFactoryServiceTest {
 		Assert.assertEquals(stuffAdditionResponse, PizzaShopConstants.SUCCESSFUL_OPERATION);
 
 		SubmitOrderPostDTO submitOrderPostDTO = OutOfStockAdditionalStuffOrderData.createSubmitOrderPostDTOObject();
-		String response = pizzaFactory.submitOrder(submitOrderPostDTO);
-		Assert.assertEquals(response, PizzaShopConstants.SUCCESSFUL_ORDER_SUBMIT_OPERATION);
+		SubmitOrderPostDTO response = pizzaFactory.submitOrder(submitOrderPostDTO);
+		Assert.assertEquals(submitOrderPostDTO, response);
 
 	}
 
@@ -242,8 +242,8 @@ public class PizzaFactoryServiceTest {
 		Assert.assertEquals(stuffAdditionResponse, PizzaShopConstants.SUCCESSFUL_OPERATION);
 
 		SubmitOrderPostDTO submitOrderPostDTO = OutOfStockSidesOrderData.createSubmitOrderPostDTOObject();
-		String response = pizzaFactory.submitOrder(submitOrderPostDTO);
-		Assert.assertEquals(response, PizzaShopConstants.SUCCESSFUL_ORDER_SUBMIT_OPERATION);
+		SubmitOrderPostDTO response = pizzaFactory.submitOrder(submitOrderPostDTO);
+		Assert.assertEquals(submitOrderPostDTO, response);
 	}
 
 }

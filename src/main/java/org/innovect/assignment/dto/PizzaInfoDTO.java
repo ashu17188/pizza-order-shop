@@ -1,26 +1,29 @@
 package org.innovect.assignment.dto;
 
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
 
-public class PizzaInfoDTO {
+import org.springframework.hateoas.ResourceSupport;
+
+public class PizzaInfoDTO extends ResourceSupport {
 
 	private int pizzaInfoId;
 
 	@NotEmpty(message="Pizza name is required.")
 	private String pizzaName;
 
-	@NotEmpty(message="Pizza Category is required.")
+	@NotEmpty(message="Pizza category is required.")
 	private String pizzaCategory;
 
 	@NotEmpty(message="Pizza size is required.")
 	private String pizzaSize;
 
-	@Size(min = 1, max = 2000, message = "Pizza price should be between 1 and 2000.")
+	@Min(value = 1, message = "Price should not be less than 1$")
 	private double price;
 
-	@Size(min = 10, max = 200, message = "About Me must be between 1 and 1000 characters")
+	@Min(value = 1, message = "Stock quantity should not be less than 1 $")
+    @Max(value = 10000, message = "Stock quantity should not be greater than 10000 $")
 	private long stockQuantity;
 
 	public PizzaInfoDTO(){}

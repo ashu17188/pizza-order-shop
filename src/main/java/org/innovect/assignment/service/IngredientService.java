@@ -33,8 +33,8 @@ public class IngredientService implements IngredientInventory {
 
 	@Override
 	public AdditionalStuffInfoDTO getIngredientById(String ingredientName) {
-		return new Gson().fromJson(
-				new Gson().toJson(additionalStuffRepository.findById(ingredientName), AdditionalStuffInfo.class),
+		AdditionalStuffInfo additionalStuffInfo = additionalStuffRepository.findById(ingredientName).orElse(null);
+		return new Gson().fromJson(new Gson().toJson(additionalStuffInfo, AdditionalStuffInfo.class),
 				AdditionalStuffInfoDTO.class);
 	}
 
@@ -44,6 +44,13 @@ public class IngredientService implements IngredientInventory {
 				new Gson().toJson(additionalStuffInfoDTO, AdditionalStuffInfoDTO.class), AdditionalStuffInfo.class));
 		return new Gson().fromJson(new Gson().toJson(objFromDB, AdditionalStuffInfo.class),
 				AdditionalStuffInfoDTO.class);
+	}
+
+	@Override
+	public void deleteIngredient(String name) {
+		AdditionalStuffInfo ingredientObj = new AdditionalStuffInfo();
+		ingredientObj.setStuffName(name);
+		additionalStuffRepository.delete(ingredientObj);
 	}
 
 	@Override

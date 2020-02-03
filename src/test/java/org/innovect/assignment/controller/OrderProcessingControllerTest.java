@@ -67,18 +67,6 @@ public class OrderProcessingControllerTest {
 				.andExpect(status().isCreated()).andDo(print());
 	}
 
-	@Test
-	public void addPizzaInfoTest() throws Exception {
-		List<PizzaInfoDTO> pizzaInfoList = new ArrayList<>();
-		PizzaInfoDTO pizzaInfoDTO = new PizzaInfoDTO(0, "Test Pizza", PizzaInfoCategoryEnum.VEGETARIAN_PIZZA.getCategory().toString(),
-				"Regular", 505.00, 10);
-		pizzaInfoList.add(pizzaInfoDTO);
-
-		String payload = new Gson().toJson(pizzaInfoList);
-		mockMvc.perform(MockMvcRequestBuilders.post("/api/addUpdatePizza").content(payload)
-				.contentType(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON)).andExpect(status().isOk())
-				.andDo(print());
-	}
 
 	@Test
 	public void addAdditionalStuffTest() throws Exception {

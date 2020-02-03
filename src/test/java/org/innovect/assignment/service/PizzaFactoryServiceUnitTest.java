@@ -18,12 +18,8 @@ import org.innovect.assignment.data.RegularAndMediumPizzaOrderData;
 import org.innovect.assignment.data.VegPizzaNonVegToppingsOrderData;
 import org.innovect.assignment.data.ZeroAdditionalStuffOrderData;
 import org.innovect.assignment.data.ZeroSidesOrderData;
-import org.innovect.assignment.dto.AdditionalStuffInfoDTO;
 import org.innovect.assignment.dto.CustomerDashboardInfoDTO;
-import org.innovect.assignment.dto.PizzaInfoDTO;
 import org.innovect.assignment.dto.SubmitOrderPostDTO;
-import org.innovect.assignment.model.AdditionalStuffCategoryEnum;
-import org.innovect.assignment.model.AdditionalStuffInfo;
 import org.innovect.assignment.model.Order;
 import org.innovect.assignment.model.PizzaInfo;
 import org.innovect.assignment.model.PizzaInfoCategoryEnum;
@@ -43,8 +39,9 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.test.context.junit4.SpringRunner;
 
 /**
- * This class contains detailed Unit test cases for various business rules mentioned in
- * problem statement.
+ * This class contains detailed Unit test cases for various business rules
+ * mentioned in problem statement.
+ * 
  * @author Ashutosh Shukla
  *
  */
@@ -74,16 +71,17 @@ public class PizzaFactoryServiceUnitTest {
 
 	@MockBean
 	private CustomRepository customRepository;
-	
+
 	/**
 	 * Fetch all information for displaying on Self Service Terminal
 	 */
 	@Test
 	public void getAvailableOptionForPizzaTest() {
 		when(pizzaInfoRepository.findAll()).thenReturn(PizzaInfoListData.createPizzaInfoList());
-		when(additionalStuffRepository.findAll()).thenReturn(AdditionalStuffInfoListData.createAdditionalStuffInfoList());
-		
-		CustomerDashboardInfoDTO customerDashboardInfoDTO = pizzaFactory.getPizzaAndExtraInfo();		
+		when(additionalStuffRepository.findAll())
+				.thenReturn(AdditionalStuffInfoListData.createAdditionalStuffInfoList());
+
+		CustomerDashboardInfoDTO customerDashboardInfoDTO = pizzaFactory.getPizzaAndExtraInfo();
 		Assert.assertNotNull(customerDashboardInfoDTO);
 		Assert.assertNotEquals(customerDashboardInfoDTO.getAdditionalStuffDTOList().size(), 0);
 	}
@@ -97,7 +95,7 @@ public class PizzaFactoryServiceUnitTest {
 		SubmitOrderPostDTO submitOrderPostDTO = NormalOrderData.createSubmitOrderPostDTOObject();
 		when(customRepository.getPizzaAvailability()).thenReturn(new ArrayList<String>());
 		when(customRepository.getAdditionalStuffAvailability()).thenReturn(new ArrayList<String>());
-		
+
 		Order verifiedOrder = pizzaFactory.verifyOrder(submitOrderPostDTO);
 		Assert.assertNotNull(verifiedOrder);
 		Assert.assertEquals(verifiedOrder.getTotalAmountToPay(), 2325.00, 0.0);
@@ -112,7 +110,7 @@ public class PizzaFactoryServiceUnitTest {
 		SubmitOrderPostDTO submitOrderPostDTO = NormalOrderData.createSubmitOrderPostDTOObject();
 		when(customRepository.getPizzaAvailability()).thenReturn(null);
 		when(customRepository.getAdditionalStuffAvailability()).thenReturn(new ArrayList<String>());
-		
+
 		Order verifiedOrder = pizzaFactory.verifyOrder(submitOrderPostDTO);
 		Assert.assertNotNull(verifiedOrder);
 		Assert.assertEquals(verifiedOrder.getTotalAmountToPay(), 2325.00, 0.0);
@@ -126,7 +124,7 @@ public class PizzaFactoryServiceUnitTest {
 	public void verifyOrderAndTotalAmountRegularMediumPizzaTest() {
 		when(customRepository.getPizzaAvailability()).thenReturn(new ArrayList<String>());
 		when(customRepository.getAdditionalStuffAvailability()).thenReturn(new ArrayList<String>());
-		
+
 		SubmitOrderPostDTO submitOrderPostDTO = RegularAndMediumPizzaOrderData.createSubmitOrderPostDTOObject();
 		Order verifiedOrder = pizzaFactory.verifyOrder(submitOrderPostDTO);
 		Assert.assertNotNull(verifiedOrder);
@@ -144,10 +142,9 @@ public class PizzaFactoryServiceUnitTest {
 				"Regular", 150.00, 20);
 		when(pizzaInfoRepository.findByPizzaNameAndPizzaSize("Deluxe Veggie", "Regular")).thenReturn(pizzaInfo);
 
-		String response = pizzaFactory.submitOrder(submitOrderPostDTO);
-		Assert.assertEquals(response, PizzaShopConstants.SUCCESSFUL_ORDER_SUBMIT_OPERATION);
+		SubmitOrderPostDTO response = pizzaFactory.submitOrder(submitOrderPostDTO);
+		Assert.assertEquals(submitOrderPostDTO, response);
 	}
-
 
 	/**
 	 * Vegetarian pizza cannot have a non-­vegetarian topping.
@@ -157,7 +154,7 @@ public class PizzaFactoryServiceUnitTest {
 		SubmitOrderPostDTO submitOrderPostDTO = VegPizzaNonVegToppingsOrderData.createSubmitOrderPostDTOObject();
 		when(customRepository.getPizzaAvailability()).thenReturn(new ArrayList<String>());
 		when(customRepository.getAdditionalStuffAvailability()).thenReturn(new ArrayList<String>());
-		
+
 		Order verifiedOrder = pizzaFactory.verifyOrder(submitOrderPostDTO);
 		Assert.assertNotNull(verifiedOrder);
 		Assert.assertEquals(2540.00, verifiedOrder.getTotalAmountToPay(), 0.0);
@@ -227,8 +224,8 @@ public class PizzaFactoryServiceUnitTest {
 		when(customRepository.getPizzaAvailability()).thenReturn(new ArrayList<String>());
 		when(customRepository.getAdditionalStuffAvailability()).thenReturn(new ArrayList<String>());
 
-		String response = pizzaFactory.submitOrder(submitOrderPostDTO);
-		Assert.assertNotNull(response, PizzaShopConstants.SUCCESSFUL_ORDER_SUBMIT_OPERATION);
+		SubmitOrderPostDTO response = pizzaFactory.submitOrder(submitOrderPostDTO);
+		Assert.assertEquals(submitOrderPostDTO, response);
 	}
 
 	/*
@@ -240,8 +237,8 @@ public class PizzaFactoryServiceUnitTest {
 		when(customRepository.getPizzaAvailability()).thenReturn(new ArrayList<String>());
 		when(customRepository.getAdditionalStuffAvailability()).thenReturn(new ArrayList<String>());
 
-		String response = pizzaFactory.submitOrder(submitOrderPostDTO);
-		Assert.assertNotNull(response, PizzaShopConstants.SUCCESSFUL_ORDER_SUBMIT_OPERATION);
+		SubmitOrderPostDTO response = pizzaFactory.submitOrder(submitOrderPostDTO);
+		Assert.assertEquals(submitOrderPostDTO, response);
 	}
 
 	/**
@@ -255,7 +252,7 @@ public class PizzaFactoryServiceUnitTest {
 		when(customRepository.getAdditionalStuffAvailability()).thenReturn(new ArrayList<String>());
 
 		SubmitOrderPostDTO submitOrderPostDTO = OutOfStockPizzaOrderData.createSubmitOrderPostDTOObject();
-		String response = pizzaFactory.submitOrder(submitOrderPostDTO);
+		SubmitOrderPostDTO response = pizzaFactory.submitOrder(submitOrderPostDTO);
 		Assert.assertEquals(response, PizzaShopConstants.SUCCESSFUL_ORDER_SUBMIT_OPERATION);
 
 	}
@@ -271,8 +268,8 @@ public class PizzaFactoryServiceUnitTest {
 		when(customRepository.getAdditionalStuffAvailability()).thenReturn(unavailablStuffList);
 
 		SubmitOrderPostDTO submitOrderPostDTO = OutOfStockAdditionalStuffOrderData.createSubmitOrderPostDTOObject();
-		String response = pizzaFactory.submitOrder(submitOrderPostDTO);
-		Assert.assertEquals(response, PizzaShopConstants.SUCCESSFUL_ORDER_SUBMIT_OPERATION);
+		SubmitOrderPostDTO response = pizzaFactory.submitOrder(submitOrderPostDTO);
+		Assert.assertEquals(submitOrderPostDTO, response);
 
 	}
 
@@ -287,8 +284,8 @@ public class PizzaFactoryServiceUnitTest {
 		when(customRepository.getAdditionalStuffAvailability()).thenReturn(unavailablStuffList);
 
 		SubmitOrderPostDTO submitOrderPostDTO = OutOfStockSidesOrderData.createSubmitOrderPostDTOObject();
-		String response = pizzaFactory.submitOrder(submitOrderPostDTO);
-		Assert.assertEquals(response, PizzaShopConstants.SUCCESSFUL_ORDER_SUBMIT_OPERATION);
+		SubmitOrderPostDTO response = pizzaFactory.submitOrder(submitOrderPostDTO);
+		Assert.assertEquals(submitOrderPostDTO, response);
 	}
 
 }

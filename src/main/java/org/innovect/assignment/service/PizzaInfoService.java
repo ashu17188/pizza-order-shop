@@ -2,7 +2,10 @@ package org.innovect.assignment.service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
+
 import javax.transaction.Transactional;
+
 import org.innovect.assignment.dto.PizzaInfoDTO;
 import org.innovect.assignment.model.PizzaInfo;
 import org.innovect.assignment.repository.PizzaInfoRepository;
@@ -10,6 +13,7 @@ import org.innovect.assignment.utils.PizzaShopConstants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
+
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
@@ -28,14 +32,22 @@ public class PizzaInfoService implements PizzaInventory{
 	
 	@Override
 	public PizzaInfoDTO getPizzaById(int id) {
-		return new Gson().fromJson(new Gson().toJson(pizzaInfoRepository.findById(id)), PizzaInfoDTO.class);
-
+		PizzaInfo objFromDB = pizzaInfoRepository.findById(id).orElse(null);
+		PizzaInfoDTO pizzaInfoDTO =  new Gson().fromJson(new Gson().toJson(objFromDB), PizzaInfoDTO.class);
+		 return pizzaInfoDTO;
 	}
 	
 	@Override
 	public PizzaInfoDTO saveAndUpdatePizza(PizzaInfoDTO pizzaInfoDTO) {
 		PizzaInfo pizzaObjFromDB = pizzaInfoRepository.save(new Gson().fromJson( new Gson().toJson(pizzaInfoDTO), PizzaInfo.class));
 		return new Gson().fromJson(new Gson().toJson(pizzaObjFromDB),PizzaInfoDTO.class);
+	}
+	
+	@Override
+	public void deletePizza(int pizzaId) {
+		PizzaInfo pizzaInfo = new PizzaInfo();
+		pizzaInfo.setPizzaInfoId(pizzaId);
+		pizzaInfoRepository.delete(pizzaInfo);
 	}
 	
 	@Override

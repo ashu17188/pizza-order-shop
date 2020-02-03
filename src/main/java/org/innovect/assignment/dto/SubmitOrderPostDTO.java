@@ -4,6 +4,8 @@ import java.util.List;
 
 public class SubmitOrderPostDTO {
 
+	private String orderId;
+	
 	private String custName;
 	
 	private String contactNumber;
@@ -14,6 +16,14 @@ public class SubmitOrderPostDTO {
 
 	private List<OrderSidesDTO> sideOrderList;
 	
+	public String getOrderId() {
+		return orderId;
+	}
+
+	public void setOrderId(String orderId) {
+		this.orderId = orderId;
+	}
+
 	public String getCustName() {
 		return custName;
 	}

@@ -119,7 +119,7 @@ public class OrderProcessingControllerUnitTest {
 		order.setPizzaList(orderPizzaList);
 		order.setSideOrderList(orderSidesList);
 
-		when(pizzaFactory.submitOrder(submitOrderPostDTO)).thenReturn(PizzaShopConstants.SUCCESSFUL_ORDER_SUBMIT_OPERATION);
+		when(pizzaFactory.submitOrder(submitOrderPostDTO)).thenReturn(submitOrderPostDTO);
 
 		mockMvc.perform(MockMvcRequestBuilders.post("/api/submitOrder").content(new Gson().toJson(submitOrderPostDTO))
 				.contentType(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON))

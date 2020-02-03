@@ -6,6 +6,7 @@
 
 ##References
 ** Batch Rest End Points:** 	
-	 https://www.codementor.io/blog/batch-endpoints-6olbjay1hd
+https://www.codementor.io/blog/batch-endpoints-6olbjay1hd
 	
-
+** Javax validation:**
+https://www.baeldung.com/javax-validation 

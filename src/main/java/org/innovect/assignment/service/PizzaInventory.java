@@ -1,6 +1,7 @@
 package org.innovect.assignment.service;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.innovect.assignment.dto.PizzaInfoDTO;
 
@@ -36,5 +37,7 @@ public interface PizzaInventory {
 	 * @return "SUCCESSFUL" or specific reason for failure.
 	 */
 	String addAndUpdatePizzaBatch(List<PizzaInfoDTO> pizzaInfoDTOList);
+
+	void deletePizza(int pizzaId);
 
 }

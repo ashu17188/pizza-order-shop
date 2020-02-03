@@ -31,4 +31,10 @@ public interface IngredientInventory {
 	 * @return "SUCCESSFUL" or specific error.
 	 */
 	String saveAndUpdateIngredientBatch(List<AdditionalStuffInfoDTO> additionalStuffInfoDTOList);
+
+	/**
+	 * This method deletes ingredient like sides, crust, toppings using name.
+	 * @param name Unique name
+	 */
+	void deleteIngredient(String name);
 }

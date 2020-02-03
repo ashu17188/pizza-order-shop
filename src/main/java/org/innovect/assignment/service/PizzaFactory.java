@@ -28,6 +28,13 @@ public interface PizzaFactory {
 	 * @param submitOrderPostDTO DTO containing list of Pizza and sides for validation.
 	 * @return Confirmation String if current operation is successfull otherwise throwing exception.
 	 */
-	String submitOrder(SubmitOrderPostDTO submitOrderPostDTO);
+	SubmitOrderPostDTO submitOrder(SubmitOrderPostDTO submitOrderPostDTO);
+
+	/**
+	 * This method provides information regarding Order by order id.
+	 * @param orderId unique id to identify particular order.
+	 * @return how many pizzas and which all types of ingredients have been ordered.
+	 */
+	SubmitOrderPostDTO getOrderById(String orderId);
 
 }

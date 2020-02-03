@@ -1,6 +1,8 @@
 package org.innovect.assignment.dto;
 
-public class AdditionalStuffInfoDTO {
+import org.springframework.hateoas.ResourceSupport;
+
+public class AdditionalStuffInfoDTO extends ResourceSupport{
 
 	private String stuffName;
 

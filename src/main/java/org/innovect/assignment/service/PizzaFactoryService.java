@@ -120,7 +120,14 @@ public class PizzaFactoryService implements PizzaFactory {
 
 	@Override
 	@Transactional
-	public String submitOrder(SubmitOrderPostDTO submitOrderPostDTO) {
+	public SubmitOrderPostDTO getOrderById(String orderId) {
+		Order order = orderRepository.findById(orderId).orElse(null);
+		return new Gson().fromJson(new Gson().toJson(order), SubmitOrderPostDTO.class);
+	}
+	
+	@Override
+	@Transactional
+	public SubmitOrderPostDTO submitOrder(SubmitOrderPostDTO submitOrderPostDTO) {
 		Order order = new Order();
 		try {
 			order = this.verifyOrder(submitOrderPostDTO);
@@ -136,7 +143,7 @@ public class PizzaFactoryService implements PizzaFactory {
 		} catch (RuntimeException e) {
 			throw e;
 		}
-		return PizzaShopConstants.SUCCESSFUL_ORDER_SUBMIT_OPERATION;
+		return new Gson().fromJson(new Gson().toJson(order), SubmitOrderPostDTO.class);
 	}
 
 	private String updateStockPizzaInfoInventory(List<OrderPizza> orderPizzaList) {

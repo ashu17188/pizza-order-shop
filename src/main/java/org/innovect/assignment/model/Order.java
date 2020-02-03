@@ -12,6 +12,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 import org.hibernate.annotations.GenericGenerator;
 import org.innovect.assignment.pizza.validation.PizzaInfoStrategy;
@@ -53,14 +54,17 @@ public class Order extends TackingInfo implements Serializable {
 
 	@Autowired
 	@Qualifier("regularPizzaInfo")
+	@Transient
 	private PizzaInfoStrategy regularPizzaInfo;
 	
 	@Autowired
 	@Qualifier("mediumPizzaInfo")
+	@Transient
 	private PizzaInfoStrategy mediumPizzaInfo;
 
 	@Autowired
 	@Qualifier("largePizzaInfo")
+	@Transient
 	private PizzaInfoStrategy largePizzaInfo;
 
 	/**
