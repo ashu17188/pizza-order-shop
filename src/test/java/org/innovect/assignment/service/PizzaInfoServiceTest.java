@@ -4,9 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.innovect.assignment.AppRunner;
-import org.innovect.assignment.data.OutOfStockPizzaOrderData;
 import org.innovect.assignment.dto.PizzaInfoDTO;
-import org.innovect.assignment.dto.SubmitOrderPostDTO;
 import org.innovect.assignment.model.PizzaInfoCategoryEnum;
 import org.innovect.assignment.utils.PizzaShopConstants;
 import org.junit.Assert;

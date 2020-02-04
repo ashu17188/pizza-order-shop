@@ -10,9 +10,7 @@ import java.util.List;
 
 import org.innovect.assignment.data.NormalOrderData;
 import org.innovect.assignment.dto.AdditionalStuffInfoDTO;
-import org.innovect.assignment.dto.PizzaInfoDTO;
 import org.innovect.assignment.model.AdditionalStuffCategoryEnum;
-import org.innovect.assignment.model.PizzaInfoCategoryEnum;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -38,23 +36,29 @@ public class OrderProcessingControllerTest {
 	private MockMvc mockMvc;
 
 	@Autowired
-	private OrderProcessingController pizzaInfoController;
+	private OrderProcessingController orderProcessingController;
 
 	@Before
 	public void setup() throws Exception {
-		this.mockMvc = standaloneSetup(this.pizzaInfoController).build();
+		this.mockMvc = standaloneSetup(this.orderProcessingController).build();
 	}
 
 	@Test
+	public void getAvailableUriTest() throws Exception {
+		mockMvc.perform(get("/api/orders/").contentType(MediaType.APPLICATION_JSON)).andExpect(status().isNoContent())
+				.andDo(print()).andReturn();
+	}
+	
+	@Test
 	public void getAvailableOptionForPizzaTest() throws Exception {
-		mockMvc.perform(get("/api/dashboard").contentType(MediaType.APPLICATION_JSON)).andExpect(status().isOk())
+		mockMvc.perform(get("/api/orders/dashboard").contentType(MediaType.APPLICATION_JSON)).andExpect(status().isOk())
 				.andDo(print()).andReturn();
 	}
 
 	@Test
 	public void verifyOrderTest() throws Exception {
 		String payload = new Gson().toJson(NormalOrderData.createSubmitOrderPostDTOObject());
-		mockMvc.perform(MockMvcRequestBuilders.post("/api/verifyOrder").content(payload)
+		mockMvc.perform(MockMvcRequestBuilders.patch("/api/orders/verify").content(payload)
 				.contentType(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON)).andExpect(status().isOk())
 				.andDo(print());
 	}
@@ -62,35 +66,16 @@ public class OrderProcessingControllerTest {
 	@Test
 	public void submitNormalOrderTest() throws Exception {
 		String payload = new Gson().toJson(NormalOrderData.createSubmitOrderPostDTOObject());
-		mockMvc.perform(MockMvcRequestBuilders.post("/api/submitOrder").content(payload)
+		mockMvc.perform(MockMvcRequestBuilders.post("/api/orders/submit").content(payload)
 				.contentType(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON))
 				.andExpect(status().isCreated()).andDo(print());
 	}
-
-
-	@Test
-	public void addAdditionalStuffTest() throws Exception {
-		List<AdditionalStuffInfoDTO> additionalStuffDTOList = new ArrayList<>();
-		AdditionalStuffInfoDTO additionalStuffInfoDTO = new AdditionalStuffInfoDTO("Test Stuff",
-				AdditionalStuffCategoryEnum.VEG_TOPPINGS.getCategory(), 39.00, 50);
-		additionalStuffDTOList.add(additionalStuffInfoDTO);
-
-		String payload = new Gson().toJson(additionalStuffDTOList);
-		mockMvc.perform(MockMvcRequestBuilders.post("/api/addUpdateStuff").content(payload)
-				.contentType(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON)).andExpect(status().isOk())
-				.andDo(print());
+	
+	@Test(expected = RuntimeException.class)
+	public void submitNullOrderTest() throws Exception {
+		String payload = null;
+		mockMvc.perform(MockMvcRequestBuilders.post("/api/orders/submit").content(payload)
+				.contentType(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON))
+				.andExpect(status().isCreated()).andDo(print());
 	}
-
-	@Test
-	public void getAllPizzInfoListTest() throws Exception {
-		mockMvc.perform(get("/api/allPizzaInfo").contentType(MediaType.APPLICATION_JSON)).andExpect(status().isOk())
-				.andDo(print()).andReturn();
-	}
-
-	@Test
-	public void getAllStuffInfoTest() throws Exception {
-		mockMvc.perform(get("/api/allStuffInfo").contentType(MediaType.APPLICATION_JSON)).andExpect(status().isOk())
-				.andDo(print()).andReturn();
-	}
-
 }

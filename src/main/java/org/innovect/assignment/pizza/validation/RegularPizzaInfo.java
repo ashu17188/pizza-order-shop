@@ -8,12 +8,12 @@ import org.innovect.assignment.model.OrderPizza;
 import org.innovect.assignment.model.PizzaInfoCategoryEnum;
 import org.innovect.assignment.utils.PizzaShopConstants;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
 import com.google.common.util.concurrent.AtomicDouble;
 
-@Service
+@Component
 public class RegularPizzaInfo implements PizzaInfoStrategy {
 
 	@Value("${pizza.order.shop.max.toppings}")
@@ -28,7 +28,6 @@ public class RegularPizzaInfo implements PizzaInfoStrategy {
 	 */
 	public String validatePizza(OrderPizza orderPizza, List<String> unavailableStuffNameList) {
 		AtomicInteger nonVegToppingsCount = new AtomicInteger(0);
-		AtomicDouble totalStuffAmount = new AtomicDouble(0.0);
 
 		if (StringUtils.isEmpty(orderPizza.getOrderAdditionalStuffList())) {
 			return PizzaShopConstants.SUCCESSFUL_OPERATION;
@@ -41,10 +40,6 @@ public class RegularPizzaInfo implements PizzaInfoStrategy {
 			if (stuff.getOrderedQuantity() == 0) {
 				throw new RuntimeException(stuff.getStuffName() + " has zero quantity ordered.");
 			}
-
-			// Cost Calculation for various Stuff corresponding to ordered Pizza which is
-			// not Large.
-			totalStuffAmount.addAndGet(stuff.getPrice() * stuff.getOrderedQuantity());
 
 			// Vegetarian pizza Validations
 			if (orderPizza.getPizzaCategory().equalsIgnoreCase(PizzaInfoCategoryEnum.VEGETARIAN_PIZZA.getCategory())) {
@@ -83,8 +78,12 @@ public class RegularPizzaInfo implements PizzaInfoStrategy {
 	@Override
 	public double calculateAdditionalCost(OrderPizza orderPizza, List<String> unavailableStuffNameList) {
 		AtomicDouble totalStuffAmount = new AtomicDouble(0.0);
+		
+		if (StringUtils.isEmpty(orderPizza.getOrderAdditionalStuffList())) {
+			return totalStuffAmount.get();
+		}
 		// Out of Stock Additional Stuff can not be ordered
-		orderPizza.getOrderAdditionalStuffList().forEach(stuff -> {
+		orderPizza.getOrderAdditionalStuffList().stream().forEach(stuff -> {
 			// Cost Calculation for various Stuff corresponding to ordered Pizza which is
 			// not Large.
 			totalStuffAmount.addAndGet(stuff.getPrice() * stuff.getOrderedQuantity());

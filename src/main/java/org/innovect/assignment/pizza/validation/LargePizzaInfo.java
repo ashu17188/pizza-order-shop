@@ -8,12 +8,12 @@ import org.innovect.assignment.model.OrderAdditionalStuff;
 import org.innovect.assignment.model.OrderPizza;
 import org.innovect.assignment.model.PizzaInfoCategoryEnum;
 import org.innovect.assignment.utils.PizzaShopConstants;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
 import com.google.common.util.concurrent.AtomicDouble;
 
-@Service
+@Component
 public class LargePizzaInfo implements PizzaInfoStrategy {
 
 	/**
@@ -76,6 +76,10 @@ public class LargePizzaInfo implements PizzaInfoStrategy {
 	public double calculateAdditionalCost(OrderPizza orderPizza, List<String> unavailableStuffNameList) {
 		AtomicDouble totalStuffAmount = new AtomicDouble(0.0);
 		List<OrderAdditionalStuff> additionStuffList = orderPizza.getOrderAdditionalStuffList();
+		if (StringUtils.isEmpty(orderPizza.getOrderAdditionalStuffList())) {
+			return totalStuffAmount.get();
+		}
+
 		for (int i = 0; i < additionStuffList.size(); i++) {
 
 			// Cost would not be calculate for 1st two highest cost stuff.

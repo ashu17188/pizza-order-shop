@@ -195,8 +195,14 @@ public class PizzaFactoryService implements PizzaFactory {
 			}
 
 			if (null != addtionalStuffMap.get(additionalStuffInfo.getStuffName())) {
-				additionalStuffInfo.setStockQuantity(updatedAdditionalStuff(addtionalStuffMap, additionalStuffInfo));
-				additionalStuffInfo.setStockQuantity(updatedSidesQuantity(addtionalStuffMap, additionalStuffInfo));
+				Object obj = addtionalStuffMap.get(additionalStuffInfo.getStuffName());
+				if (obj instanceof OrderAdditionalStuff) {
+					additionalStuffInfo
+							.setStockQuantity(updatedAdditionalStuff(addtionalStuffMap, additionalStuffInfo));
+				} else {
+					additionalStuffInfo.setStockQuantity(updatedSidesQuantity(addtionalStuffMap, additionalStuffInfo));
+				}
+
 			}
 		}
 
@@ -232,30 +238,26 @@ public class PizzaFactoryService implements PizzaFactory {
 			AdditionalStuffInfo additionalStuffInfo) {
 		long quantity = 0;
 		Object obj = addtionalStuffMap.get(additionalStuffInfo.getStuffName());
-		if (obj instanceof OrderAdditionalStuff) {
-			OrderAdditionalStuff orderAdditionalStuff = (OrderAdditionalStuff) obj;
-			if (additionalStuffInfo.getStockQuantity() - orderAdditionalStuff.getOrderedQuantity() < 0) {
-				throw new RuntimeException(orderAdditionalStuff.getStuffName() + ", "
-						+ orderAdditionalStuff.getStuffCategory() + " stock is not sufficient.");
-			}
-
-			quantity = additionalStuffInfo.getStockQuantity() - orderAdditionalStuff.getOrderedQuantity();
-
+		OrderAdditionalStuff orderAdditionalStuff = (OrderAdditionalStuff) obj;
+		if (additionalStuffInfo.getStockQuantity() - orderAdditionalStuff.getOrderedQuantity() < 0) {
+			throw new RuntimeException(orderAdditionalStuff.getStuffName() + ", "
+					+ orderAdditionalStuff.getStuffCategory() + " stock is not sufficient.");
 		}
+
+		quantity = additionalStuffInfo.getStockQuantity() - orderAdditionalStuff.getOrderedQuantity();
+
 		return quantity;
 	}
 
 	private long updatedSidesQuantity(Map<String, Object> addtionalStuffMap, AdditionalStuffInfo additionalStuffInfo) {
 		long quantity = 0;
 		Object obj = addtionalStuffMap.get(additionalStuffInfo.getStuffName());
-
-		if (obj instanceof OrderSides) {
-			OrderSides orderSides = (OrderSides) obj;
-			if (additionalStuffInfo.getStockQuantity() - orderSides.getOrderedQuantity() < 0) {
-				throw new RuntimeException(orderSides.getSideName() + " stock is not sufficient.");
-			}
-			quantity = additionalStuffInfo.getStockQuantity() - orderSides.getOrderedQuantity();
+		OrderSides orderSides = (OrderSides) obj;
+		if (additionalStuffInfo.getStockQuantity() - orderSides.getOrderedQuantity() < 0) {
+			throw new RuntimeException(orderSides.getSideName() + " stock is not sufficient.");
 		}
+		quantity = additionalStuffInfo.getStockQuantity() - orderSides.getOrderedQuantity();
+
 		return quantity;
 	}
 }

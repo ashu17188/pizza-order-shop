@@ -48,7 +48,7 @@ public class OrderProcessingController {
 	@Autowired
 	private ApplicationEventPublisher eventPublisher;
 
-
+	@ApiOperation(value = "Provides available urls in controller.")
     @GetMapping("/")
     @ResponseStatus(value = HttpStatus.NO_CONTENT)
     public void getOrderUrl(final HttpServletRequest request, final HttpServletResponse response) {
@@ -103,6 +103,7 @@ public class OrderProcessingController {
 	@ApiResponses(value = { @ApiResponse(code = 200, message = "Successfull order submit."),
 			@ApiResponse(code = 400, message = "Specifies system generated error.") })
 	@PostMapping("/submit")
+	@ResponseStatus(HttpStatus.CREATED)
 	public SubmitOrderPostDTO submitOrder(@RequestBody @Valid SubmitOrderPostDTO submitOrderPostDTO,
 			final HttpServletResponse response) {
 		Preconditions.checkNotNull(submitOrderPostDTO);

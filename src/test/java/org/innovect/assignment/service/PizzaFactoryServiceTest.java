@@ -114,7 +114,7 @@ public class PizzaFactoryServiceTest {
 		SubmitOrderPostDTO submitOrderPostDTO = NormalOrderData.createSubmitOrderPostDTOObject();
 		SubmitOrderPostDTO response = pizzaFactory.submitOrder(submitOrderPostDTO);
 
-		Assert.assertEquals(response, submitOrderPostDTO);
+		Assert.assertNotNull(response.getOrderId());
 	}
 
 	/**
@@ -180,7 +180,7 @@ public class PizzaFactoryServiceTest {
 	public void zeroAdditionalStuffOrderTest() {
 		SubmitOrderPostDTO submitOrderPostDTO = ZeroAdditionalStuffOrderData.createSubmitOrderPostDTOObject();
 		SubmitOrderPostDTO response = pizzaFactory.submitOrder(submitOrderPostDTO);
-		Assert.assertEquals(response, submitOrderPostDTO);
+		Assert.assertNotNull(response.getOrderId());
 	}
 
 	/*
@@ -190,7 +190,7 @@ public class PizzaFactoryServiceTest {
 	public void zeroSidesOrderTest() {
 		SubmitOrderPostDTO submitOrderPostDTO = ZeroSidesOrderData.createSubmitOrderPostDTOObject();
 		SubmitOrderPostDTO response = pizzaFactory.submitOrder(submitOrderPostDTO);
-		Assert.assertEquals(response, submitOrderPostDTO);
+		Assert.assertNotNull(response.getOrderId());
 	}
 
 	/**

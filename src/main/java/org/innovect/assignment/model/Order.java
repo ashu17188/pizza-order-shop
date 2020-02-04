@@ -15,14 +15,22 @@ import javax.persistence.Table;
 import javax.persistence.Transient;
 
 import org.hibernate.annotations.GenericGenerator;
+import org.innovect.assignment.pizza.validation.LargePizzaInfo;
+import org.innovect.assignment.pizza.validation.MediumPizzaInfo;
 import org.innovect.assignment.pizza.validation.PizzaInfoStrategy;
+import org.innovect.assignment.pizza.validation.RegularPizzaInfo;
 import org.innovect.assignment.utils.PizzaShopConstants;
+import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.ApplicationContextAware;
+import org.springframework.stereotype.Service;
+import org.springframework.web.context.support.SpringBeanAutowiringSupport;
 
 @Entity
 @Table(name = "order_main")
-public class Order extends TackingInfo implements Serializable {
+@Service
+public class Order extends TackingInfo implements Serializable, ApplicationContextAware {
 
 	private static final long serialVersionUID = 1559908347912663433L;
 
@@ -52,20 +60,7 @@ public class Order extends TackingInfo implements Serializable {
 	@Column(name = "total_amount")
 	private double totalAmountToPay;
 
-	@Autowired
-	@Qualifier("regularPizzaInfo")
-	@Transient
-	private PizzaInfoStrategy regularPizzaInfo;
-
-	@Autowired
-	@Qualifier("mediumPizzaInfo")
-	@Transient
-	private PizzaInfoStrategy mediumPizzaInfo;
-
-	@Autowired
-	@Qualifier("largePizzaInfo")
-	@Transient
-	private PizzaInfoStrategy largePizzaInfo;
+	private static ApplicationContext context;
 
 	/**
 	 * This method add Pizza to Pizza List for Order processing.
@@ -79,16 +74,19 @@ public class Order extends TackingInfo implements Serializable {
 
 		switch (orderPizza.getPizzaSize()) {
 		case PizzaShopConstants.LARGE_PIZZA:
+			PizzaInfoStrategy largePizzaInfo = context.getBean(LargePizzaInfo.class);
 			validationResponse = largePizzaInfo.validatePizza(orderPizza, unavailableStuffName);
 			this.totalAmountToPay += largePizzaInfo.calculateAdditionalCost(orderPizza, unavailableStuffName);
 			break;
 
 		case PizzaShopConstants.MEDIUM_PIZZA:
+			PizzaInfoStrategy mediumPizzaInfo = context.getBean(MediumPizzaInfo.class);
 			validationResponse = mediumPizzaInfo.validatePizza(orderPizza, unavailableStuffName);
 			this.totalAmountToPay += mediumPizzaInfo.calculateAdditionalCost(orderPizza, unavailableStuffName);
 			break;
 
 		case PizzaShopConstants.REGULAR_PIZZA:
+			PizzaInfoStrategy regularPizzaInfo = context.getBean(RegularPizzaInfo.class);
 			validationResponse = regularPizzaInfo.validatePizza(orderPizza, unavailableStuffName);
 			this.totalAmountToPay += regularPizzaInfo.calculateAdditionalCost(orderPizza, unavailableStuffName);
 			break;
@@ -187,4 +185,12 @@ public class Order extends TackingInfo implements Serializable {
 				+ sideOrderList + ", totalAmountToPay=" + totalAmountToPay + "]";
 	}
 
+	@Override
+	public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
+		context = applicationContext;
+	}
+
+	public static <T> T getBean(Class<T> beanClass) {
+		return context.getBean(beanClass);
+	}
 }
