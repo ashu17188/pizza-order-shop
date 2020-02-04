@@ -7,6 +7,7 @@ import org.innovect.assignment.model.AdditionalStuffCategoryEnum;
 import org.innovect.assignment.model.OrderPizza;
 import org.innovect.assignment.model.PizzaInfoCategoryEnum;
 import org.innovect.assignment.utils.PizzaShopConstants;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
@@ -14,6 +15,9 @@ import com.google.common.util.concurrent.AtomicDouble;
 
 @Service
 public class RegularPizzaInfo implements PizzaInfoStrategy {
+
+	@Value("${pizza.order.shop.max.toppings}")
+	private String maxToppings;
 
 	/**
 	 * This method validates different Bussiness rules which have been set for valid
@@ -65,7 +69,7 @@ public class RegularPizzaInfo implements PizzaInfoStrategy {
 						.equalsIgnoreCase(AdditionalStuffCategoryEnum.NON_VEG_TOPPINGS.getCategory())) {
 
 					// You can add only one of the non-­veg toppings in non-­vegetarian pizza.
-					if (nonVegToppingsCount.incrementAndGet() == PizzaShopConstants.MAX_TOPPINGS) {
+					if (nonVegToppingsCount.incrementAndGet() == Integer.parseInt(maxToppings)) {
 						throw new RuntimeException(
 								"You can add only one of the non-­veg toppings in non-­vegetarian pizza.");
 					}

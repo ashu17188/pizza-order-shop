@@ -2,20 +2,26 @@ package org.innovect.assignment.dto;
 
 import java.util.List;
 
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
+
 public class OrderPizzaDTO {
 
 	private String pizzaName;
 
+	@NotEmpty(message="Category is required.")
 	private String pizzaCategory;
 
+	@NotEmpty(message="Pizza size is required.(i.e Large, Medium, Regular)")
 	private String pizzaSize;
 
+	@Min(value = 1, message = "Price should not be less than 1$")
 	private double price;
 
 	private String crust;
 
-//	private Order order;
-
+	@NotNull
 	private List<OrderAdditionalStuffDTO> orderAdditionalStuffList;
 
 	public OrderPizzaDTO() {}

@@ -3,6 +3,7 @@ package org.innovect.assignment.controller;
 import java.util.List;
 
 import javax.servlet.http.HttpServletResponse;
+import javax.validation.Valid;
 
 import org.innovect.assignment.dto.CustomerDashboardInfoDTO;
 import org.innovect.assignment.dto.SubmitOrderPostDTO;
@@ -54,7 +55,7 @@ public class OrderProcessingController {
 	@ApiResponses(value = { @ApiResponse(code = 200, message = "Successfully verified order."),
 			@ApiResponse(code = 400, message = "Specifies system generated error.") })
 	@PatchMapping("/verify")
-	public String verifyOrder(@RequestBody SubmitOrderPostDTO submitOrderPostDTO) {
+	public String verifyOrder(@RequestBody @Valid SubmitOrderPostDTO submitOrderPostDTO) {
 		Preconditions.checkNotNull(submitOrderPostDTO);
 		pizzaFactory.verifyOrder(submitOrderPostDTO);
 		return PizzaShopConstants.SUCCESSFUL_OPERATION;
@@ -75,7 +76,7 @@ public class OrderProcessingController {
 	@ApiResponses(value = { @ApiResponse(code = 200, message = "Successfull order submit."),
 			@ApiResponse(code = 400, message = "Specifies system generated error.") })
 	@PostMapping("/submit")
-	public SubmitOrderPostDTO submitOrder(@RequestBody SubmitOrderPostDTO submitOrderPostDTO,
+	public SubmitOrderPostDTO submitOrder(@RequestBody @Valid SubmitOrderPostDTO submitOrderPostDTO,
 			final HttpServletResponse response) {
 		Preconditions.checkNotNull(submitOrderPostDTO);
 		SubmitOrderPostDTO savedObj = pizzaFactory.submitOrder(submitOrderPostDTO);

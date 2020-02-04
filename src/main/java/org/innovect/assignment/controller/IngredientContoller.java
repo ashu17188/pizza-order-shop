@@ -6,6 +6,7 @@ import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
 import java.util.List;
 
 import javax.servlet.http.HttpServletResponse;
+import javax.validation.Valid;
 
 import org.innovect.assignment.dto.AdditionalStuffInfoDTO;
 import org.innovect.assignment.hateoas.event.ResourceCreatedEvent;
@@ -19,6 +20,7 @@ import org.springframework.hateoas.Link;
 import org.springframework.hateoas.Resources;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -59,7 +61,7 @@ public class IngredientContoller {
 		for (final AdditionalStuffInfoDTO ingredientDTO : ingredientList) {
 			final Link selfLink = linkTo(methodOn(getClass()).getIngredientById(ingredientDTO.getStuffName()))
 					.withSelfRel();
-			final Link addLink = linkTo(methodOn(getClass()).saveIngredient(ingredientDTO,null))
+			final Link addLink = linkTo(methodOn(getClass()).saveIngredient(ingredientDTO, null))
 					.withRel("linkRels/ingredient/add");
 			final Link updateLink = linkTo(methodOn(getClass()).updateIngredient(ingredientDTO))
 					.withRel("linkRels/ingredient/update");
@@ -79,7 +81,8 @@ public class IngredientContoller {
 	@ApiOperation(value = "Api used to get Ingredient by ingredient name.", response = AdditionalStuffInfoDTO.class)
 	@GetMapping("/ingredients/{name}")
 	public AdditionalStuffInfoDTO getIngredientById(@PathVariable(value = "name") String name) {
-		RestPreconditions.check(name, null, null);
+		if(StringUtils.isEmpty(name))throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"Ingredient name is required.");
+		
 		AdditionalStuffInfoDTO additionalStuffInfoDTO = ingredientInventory.getIngredientById(name);
 		RestPreconditions.check(additionalStuffInfoDTO, null, null);
 		log.info("Ingredient fetched successfully. {}", additionalStuffInfoDTO.toString());
@@ -89,19 +92,20 @@ public class IngredientContoller {
 	@ApiOperation(value = "Api used to save Ingredient.", response = AdditionalStuffInfoDTO.class)
 	@PostMapping("/ingredients")
 	@ResponseStatus(HttpStatus.CREATED)
-	public AdditionalStuffInfoDTO saveIngredient(@RequestBody AdditionalStuffInfoDTO additionalStuffInfoDTO,
+	public AdditionalStuffInfoDTO saveIngredient(@RequestBody @Valid AdditionalStuffInfoDTO additionalStuffInfoDTO,
 			final HttpServletResponse response) {
 		Preconditions.checkNotNull(additionalStuffInfoDTO);
 		AdditionalStuffInfoDTO savedObj = ingredientInventory.saveAndUpdateIngredient(additionalStuffInfoDTO);
 		final String idOfCreatedResource = savedObj.getStuffName();
 		eventPublisher.publishEvent(new ResourceCreatedEvent(this, response, idOfCreatedResource));
+
 		log.info("New Ingredient with id= {} created successfully.", savedObj.getStuffName());
 		return savedObj;
 	}
 
 	@ApiOperation(value = "Api used to Ingredient in repository.", response = AdditionalStuffInfoDTO.class)
 	@PutMapping("/ingredients")
-	public AdditionalStuffInfoDTO updateIngredient(@RequestBody AdditionalStuffInfoDTO additionalStuffInfoDTO) {
+	public AdditionalStuffInfoDTO updateIngredient(@RequestBody @Valid AdditionalStuffInfoDTO additionalStuffInfoDTO) {
 		Preconditions.checkNotNull(additionalStuffInfoDTO);
 		AdditionalStuffInfoDTO updatedObj = ingredientInventory.saveAndUpdateIngredient(additionalStuffInfoDTO);
 		log.info("Ingredient with id ={} updated successfully.", updatedObj.getStuffName());
@@ -112,9 +116,11 @@ public class IngredientContoller {
 	@ApiOperation(value = "Api used to Ingredient in repository.", response = AdditionalStuffInfoDTO.class)
 	@DeleteMapping("/ingredients/{name}")
 	public ResponseEntity<?> deleteIngredient(@PathVariable String name) {
+		if (StringUtils.isEmpty(name))
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Ingredient name is required");
 		ingredientInventory.deleteIngredient(name);
-		log.info("Ingredient with name :{} deleted successfully.",name);
-		return new ResponseEntity<>(HttpStatus.OK);	
+		log.info("Ingredient with name :{} deleted successfully.", name);
+		return new ResponseEntity<>(HttpStatus.OK);
 	}
 
 	@ApiOperation(value = "Create additional stuff for a Pizza order", response = String.class)
@@ -122,13 +128,8 @@ public class IngredientContoller {
 			@ApiResponse(code = 400, message = "Specifies system generated error.") })
 	@PostMapping("/ingredients/batch")
 	public String saveAndUpdateIngredientBatch(@RequestBody List<AdditionalStuffInfoDTO> additionalStuffInfoDTOList) {
-		String response = "";
-		try {
-			response = ingredientInventory.saveAndUpdateIngredientBatch(additionalStuffInfoDTOList);
-		} catch (RuntimeException e) {
-			log.error("Error occured:{}", e.getLocalizedMessage());
-			throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.getLocalizedMessage());
-		}
+		Preconditions.checkNotNull(additionalStuffInfoDTOList);
+		String response = ingredientInventory.saveAndUpdateIngredientBatch(additionalStuffInfoDTOList);
 		log.info("Batch save and update of ingredients completed successfully.");
 		return response;
 	}

@@ -34,13 +34,13 @@ public class Order extends TackingInfo implements Serializable {
 
 	@Column(name = "customer_name")
 	private String custName;
-	
+
 	@Column(name = "contact_number")
 	private String contactNumber;
-	
+
 	@Column(name = "delivery_address")
 	private String deliveryAddress;
-	
+
 	@OneToMany(cascade = { CascadeType.ALL })
 	@JoinColumn(name = "order_id")
 	private List<OrderPizza> pizzaList;
@@ -56,7 +56,7 @@ public class Order extends TackingInfo implements Serializable {
 	@Qualifier("regularPizzaInfo")
 	@Transient
 	private PizzaInfoStrategy regularPizzaInfo;
-	
+
 	@Autowired
 	@Qualifier("mediumPizzaInfo")
 	@Transient
@@ -76,18 +76,22 @@ public class Order extends TackingInfo implements Serializable {
 	 */
 	public String addPizza(OrderPizza orderPizza, List<String> unavailableStuffName) {
 		String validationResponse = "";
-		
-		if (orderPizza.getPizzaSize().equals(PizzaShopConstants.LARGE_PIZZA)) {
+
+		switch (orderPizza.getPizzaSize()) {
+		case PizzaShopConstants.LARGE_PIZZA:
 			validationResponse = largePizzaInfo.validatePizza(orderPizza, unavailableStuffName);
 			this.totalAmountToPay += largePizzaInfo.calculateAdditionalCost(orderPizza, unavailableStuffName);
-		} else if(orderPizza.getPizzaSize().equals(PizzaShopConstants.MEDIUM_PIZZA)){
+			break;
+
+		case PizzaShopConstants.MEDIUM_PIZZA:
 			validationResponse = mediumPizzaInfo.validatePizza(orderPizza, unavailableStuffName);
 			this.totalAmountToPay += mediumPizzaInfo.calculateAdditionalCost(orderPizza, unavailableStuffName);
+			break;
 
-		}else {
+		case PizzaShopConstants.REGULAR_PIZZA:
 			validationResponse = regularPizzaInfo.validatePizza(orderPizza, unavailableStuffName);
 			this.totalAmountToPay += regularPizzaInfo.calculateAdditionalCost(orderPizza, unavailableStuffName);
-
+			break;
 		}
 
 		if (!PizzaShopConstants.SUCCESSFUL_OPERATION.equalsIgnoreCase(validationResponse)) {
@@ -121,7 +125,7 @@ public class Order extends TackingInfo implements Serializable {
 	public void setOrderId(String orderId) {
 		this.orderId = orderId;
 	}
-	
+
 	public String getCustName() {
 		return custName;
 	}
@@ -182,5 +186,5 @@ public class Order extends TackingInfo implements Serializable {
 				+ ", deliveryAddress=" + deliveryAddress + ", pizzaList=" + pizzaList + ", sideOrderList="
 				+ sideOrderList + ", totalAmountToPay=" + totalAmountToPay + "]";
 	}
-	
+
 }

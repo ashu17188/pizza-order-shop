@@ -2,16 +2,23 @@ package org.innovect.assignment.dto;
 
 import java.util.List;
 
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
+
 public class SubmitOrderPostDTO {
 
 	private String orderId;
 	
+	@NotEmpty(message="Customer name is required.")
 	private String custName;
 	
+	@NotEmpty(message="Contact number is required.")
 	private String contactNumber;
 	
+	@NotEmpty(message="Correct delivery address is required.")
 	private String deliveryAddress;
-	
+
+	@NotNull
 	private List<OrderPizzaDTO> orderPizzaDTOList;
 
 	private List<OrderSidesDTO> sideOrderList;
