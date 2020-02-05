@@ -1,4 +1,4 @@
-#Pizza Order Shop
+# Pizza Order Shop
 
 This project serves api for Pizza Order shop. An end user can request Pizza, Sides, Toppings and Crust available in menu. Order from customer can contains Pizza with different combinations of Sides, Toppings and Crust. 
 
@@ -98,7 +98,7 @@ http://localhost:8085/pizza-order-shop/swagger-ui.html
 
 * **Ashutosh Shukla** - *Product Development* - [Repository](https://github.com/ashu17188)
 
-##References
+## References
 
 ** Refactoring ** https://refactoring.guru/refactoring/
 
