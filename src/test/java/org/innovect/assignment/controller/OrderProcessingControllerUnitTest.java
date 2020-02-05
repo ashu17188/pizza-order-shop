@@ -19,20 +19,18 @@ import org.innovect.assignment.dto.SubmitOrderPostDTO;
 import org.innovect.assignment.model.Order;
 import org.innovect.assignment.model.OrderPizza;
 import org.innovect.assignment.model.OrderSides;
+import org.innovect.assignment.repository.OrderRepository;
 import org.innovect.assignment.service.PizzaFactory;
-import org.innovect.assignment.utils.PizzaShopConstants;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import org.springframework.web.server.ResponseStatusException;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -56,6 +54,9 @@ public class OrderProcessingControllerUnitTest {
 	@MockBean
 	private PizzaFactory pizzaFactory;
 
+	@MockBean
+	private OrderRepository orderRepository;
+	
 	@Before
 	public void setup() throws Exception {
 		this.mockMvc = standaloneSetup(this.pizzaInfoController).build();
@@ -75,7 +76,7 @@ public class OrderProcessingControllerUnitTest {
 		customerDashboardInfoDTO.setPizzaInfoDTOList(pizzaInfoDTOList);
 
 		when(pizzaFactory.getPizzaAndExtraInfo()).thenReturn(customerDashboardInfoDTO);
-		mockMvc.perform(get("/api/dashboard").contentType(MediaType.APPLICATION_JSON)).andExpect(status().isOk())
+		mockMvc.perform(get("/api/orders/dashboard").contentType(MediaType.APPLICATION_JSON)).andExpect(status().isOk())
 				.andDo(print()).andReturn();
 	}
 
@@ -97,34 +98,8 @@ public class OrderProcessingControllerUnitTest {
 		order.setSideOrderList(orderSidesList);
 		when(pizzaFactory.verifyOrder(submitOrderPostDTO)).thenReturn(order);
 
-		mockMvc.perform(MockMvcRequestBuilders.post("/api/verifyOrder").content(new Gson().toJson(submitOrderPostDTO))
+		mockMvc.perform(MockMvcRequestBuilders.patch("/api/orders/verify").content(new Gson().toJson(submitOrderPostDTO))
 				.contentType(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON)).andExpect(status().isOk())
 				.andDo(print());
 	}
-
-	@Test
-	public void submitNormalOrderTest() throws Exception {
-		SubmitOrderPostDTO submitOrderPostDTO = NormalOrderData.createSubmitOrderPostDTOObject();
-		List<OrderPizza> orderPizzaList = new Gson().fromJson(
-				new Gson().toJson(submitOrderPostDTO.getOrderPizzaDTOList()), new TypeToken<ArrayList<OrderPizza>>() {
-				}.getType());
-		List<OrderSides> orderSidesList = new Gson().fromJson(new Gson().toJson(submitOrderPostDTO.getSideOrderList()),
-				new TypeToken<ArrayList<OrderSides>>() {
-				}.getType());
-		Order order = new Order();
-
-		order.setCustName(submitOrderPostDTO.getCustName());
-		order.setContactNumber(submitOrderPostDTO.getContactNumber());
-		order.setDeliveryAddress(submitOrderPostDTO.getDeliveryAddress());
-		order.setPizzaList(orderPizzaList);
-		order.setSideOrderList(orderSidesList);
-
-		when(pizzaFactory.submitOrder(submitOrderPostDTO)).thenReturn(submitOrderPostDTO);
-
-		mockMvc.perform(MockMvcRequestBuilders.post("/api/submitOrder").content(new Gson().toJson(submitOrderPostDTO))
-				.contentType(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON))
-				.andExpect(status().isCreated()).andDo(print());
-	}
-
-
 }

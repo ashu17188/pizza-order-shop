@@ -246,4 +246,12 @@ public class PizzaFactoryServiceTest {
 		Assert.assertEquals(submitOrderPostDTO, response);
 	}
 
+	/**
+	 * Submit order which does not have any order
+	 */
+	@Test(expected = RuntimeException.class)
+	public void submitNullOrderTest() {
+		 pizzaFactory.submitOrder(null);
+	}
+
 }

@@ -32,13 +32,32 @@ public class PizzaInfoServiceTest {
 	private PizzaInventory pizzaInventory;
 
 	/**
+	 * Test if all pizzas can be fetched.
+	 */
+	@Test
+	public void getAllPizzaTest() {
+		Assert.assertNotNull(pizzaInventory.getAllPizza());
+	}
+
+	/**
 	 * Add Pizza to inventory
 	 */
 	@Test
-	public void addPizzaInfoTest() {
+	public void addPizzaInfoByIdTest() {
+		PizzaInfoDTO pizzaInfoDTO = new PizzaInfoDTO(0, "Test Pizza",
+				PizzaInfoCategoryEnum.VEGETARIAN_PIZZA.getCategory(), "Regular", 505.00, 10);
+		PizzaInfoDTO response = pizzaInventory.saveAndUpdatePizza(pizzaInfoDTO);
+		Assert.assertNotNull(response.getPizzaInfoId());
+	}
+
+	/**
+	 * Add Pizza to inventory
+	 */
+	@Test
+	public void addPizzaInfoBatchTest() {
 		List<PizzaInfoDTO> pizzaInfoList = new ArrayList<>();
-		PizzaInfoDTO pizzaInfoDTO = new PizzaInfoDTO(0, "Test Pizza", PizzaInfoCategoryEnum.VEGETARIAN_PIZZA.getCategory(),
-				"Regular", 505.00, 10);
+		PizzaInfoDTO pizzaInfoDTO = new PizzaInfoDTO(0, "Test Pizza22",
+				PizzaInfoCategoryEnum.VEGETARIAN_PIZZA.getCategory(), "Regular", 505.00, 10);
 		pizzaInfoList.add(pizzaInfoDTO);
 		String response = pizzaInventory.addAndUpdatePizzaBatch(pizzaInfoList);
 		Assert.assertEquals(response, PizzaShopConstants.SUCCESSFUL_OPERATION);
@@ -48,7 +67,7 @@ public class PizzaInfoServiceTest {
 	 * Update Pizza information present in inventory.
 	 */
 	@Test
-	public void updatePizzaInfoTest() {
+	public void updatePizzaInfoBatchTest() {
 		List<PizzaInfoDTO> pizzaInfoList = new ArrayList<>();
 		PizzaInfoDTO pizzaInfoDTO = new PizzaInfoDTO(0, "Deluxe Veggie",
 				PizzaInfoCategoryEnum.VEGETARIAN_PIZZA.getCategory(), "Regular", 1001.00, 20);
@@ -57,5 +76,23 @@ public class PizzaInfoServiceTest {
 		Assert.assertEquals(response, PizzaShopConstants.SUCCESSFUL_OPERATION);
 	}
 
+	/**
+	 * Delete Pizza from inventory
+	 */
+	@Test
+	public void deletePizzaInfoByIdTest() {
+		PizzaInfoDTO pizzaInfoDTO = new PizzaInfoDTO(0, "Test Pizza",
+				PizzaInfoCategoryEnum.VEGETARIAN_PIZZA.getCategory(), "Regular", 505.00, 10);
+		PizzaInfoDTO response = pizzaInventory.saveAndUpdatePizza(pizzaInfoDTO);
+		pizzaInventory.deletePizza(response.getPizzaInfoId());
+	}
+
+	/**
+	 * Delete Pizza from inventory
+	 */
+	@Test(expected = RuntimeException.class)
+	public void deleteNullPizzaInfoByIdTest() {
+		pizzaInventory.deletePizza(0);
+	}
 
 }

@@ -136,6 +136,7 @@ public class PizzaFactoryService implements PizzaFactory {
 	@Override
 	@Transactional
 	public SubmitOrderPostDTO submitOrder(SubmitOrderPostDTO submitOrderPostDTO) {
+		Preconditions.checkNotNull(submitOrderPostDTO);
 		Order order = new Order();
 		try {
 			order = this.verifyOrder(submitOrderPostDTO);

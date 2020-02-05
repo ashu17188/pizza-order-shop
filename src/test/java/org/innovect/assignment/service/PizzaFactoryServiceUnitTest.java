@@ -132,7 +132,8 @@ public class PizzaFactoryServiceUnitTest {
 	}
 
 	/**
-	 * Submit order having everything according to given business rule.
+	 * Submit order having everything according to given business rule. No
+	 * exception must be thrown
 	 */
 	@Test
 	public void submitNormalOrderTest() {
@@ -141,9 +142,7 @@ public class PizzaFactoryServiceUnitTest {
 		PizzaInfo pizzaInfo = new PizzaInfo("Deluxe Veggie", PizzaInfoCategoryEnum.VEGETARIAN_PIZZA.getCategory(),
 				"Regular", 150.00, 20);
 		when(pizzaInfoRepository.findByPizzaNameAndPizzaSize("Deluxe Veggie", "Regular")).thenReturn(pizzaInfo);
-
-		SubmitOrderPostDTO response = pizzaFactory.submitOrder(submitOrderPostDTO);
-		Assert.assertEquals(submitOrderPostDTO, response);
+		pizzaFactory.submitOrder(submitOrderPostDTO);
 	}
 
 	/**
@@ -223,22 +222,19 @@ public class PizzaFactoryServiceUnitTest {
 		SubmitOrderPostDTO submitOrderPostDTO = ZeroAdditionalStuffOrderData.createSubmitOrderPostDTOObject();
 		when(customRepository.getPizzaAvailability()).thenReturn(new ArrayList<String>());
 		when(customRepository.getAdditionalStuffAvailability()).thenReturn(new ArrayList<String>());
-
-		SubmitOrderPostDTO response = pizzaFactory.submitOrder(submitOrderPostDTO);
-		Assert.assertEquals(submitOrderPostDTO, response);
+		pizzaFactory.submitOrder(submitOrderPostDTO);
 	}
 
 	/*
-	 * Order with no Sides can be ordered.
+	 * Order with no Sides can be ordered. No exception should be thrown.
 	 */
 	@Test
 	public void zeroSidesOrderTest() {
 		SubmitOrderPostDTO submitOrderPostDTO = ZeroSidesOrderData.createSubmitOrderPostDTOObject();
 		when(customRepository.getPizzaAvailability()).thenReturn(new ArrayList<String>());
 		when(customRepository.getAdditionalStuffAvailability()).thenReturn(new ArrayList<String>());
+		pizzaFactory.submitOrder(submitOrderPostDTO);
 
-		SubmitOrderPostDTO response = pizzaFactory.submitOrder(submitOrderPostDTO);
-		Assert.assertEquals(submitOrderPostDTO, response);
 	}
 
 	/**
@@ -288,4 +284,11 @@ public class PizzaFactoryServiceUnitTest {
 		Assert.assertEquals(submitOrderPostDTO, response);
 	}
 
+	/**
+	 * Submit order which does not have any order
+	 */
+	@Test(expected = RuntimeException.class)
+	public void submitNullOrderTest() {
+		 pizzaFactory.submitOrder(null);
+	}
 }

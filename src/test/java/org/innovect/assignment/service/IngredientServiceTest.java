@@ -32,6 +32,14 @@ public class IngredientServiceTest {
 	private IngredientInventory ingredientInventory;
 
 	/**
+	 * Test for fetching All additional Stuff from inventory.
+	 */
+	@Test
+	public void getAllIngredientTest() {
+		Assert.assertNotNull(ingredientInventory.getAllIngredient());
+	}
+
+	/**
 	 * Add Addition Stuff of various category eg Veg Toppings, miscellaneous, sides
 	 * etc.
 	 */
@@ -45,6 +53,7 @@ public class IngredientServiceTest {
 		Assert.assertEquals(response, PizzaShopConstants.SUCCESSFUL_OPERATION);
 	}
 
+
 	/**
 	 * Update information of Additional Stuff (eg. Veg Toppings, sides etc) in
 	 * inventory
@@ -57,6 +66,35 @@ public class IngredientServiceTest {
 		additionalStuffDTOList.add(additionalStuffInfoDTO);
 		String response = ingredientInventory.saveAndUpdateIngredientBatch(additionalStuffDTOList);
 		Assert.assertEquals(response, PizzaShopConstants.SUCCESSFUL_OPERATION);
+	}
+
+	/**
+	 * Delete ingredient
+	 */
+	@Test
+	public void deleteIngredientTest() {
+		AdditionalStuffInfoDTO additionalStuffInfoDTO = new AdditionalStuffInfoDTO("Test Stuff2",
+				AdditionalStuffCategoryEnum.VEG_TOPPINGS.getCategory(), 39.00, 50);
+		ingredientInventory.saveAndUpdateIngredient(additionalStuffInfoDTO);
+		ingredientInventory.deleteIngredient(additionalStuffInfoDTO.getStuffName());
+		
+	}
+	
+	/**
+	 * Delete ingredient
+	 */
+	@Test(expected = RuntimeException.class)
+	public void deleteNullIngredientTest() {
+		ingredientInventory.deleteIngredient(null);
+	}
+	
+
+	/**
+	 *Save and update null for batch save and update.
+	 */
+	@Test(expected = RuntimeException.class)
+	public void nullCheckAdditionalStuffTest() {
+		ingredientInventory.saveAndUpdateIngredientBatch(null);
 	}
 
 }

@@ -9,10 +9,10 @@ import static org.springframework.test.web.servlet.setup.MockMvcBuilders.standal
 import java.util.ArrayList;
 import java.util.List;
 
-import org.innovect.assignment.data.AdditionalStuffInfoListData;
 import org.innovect.assignment.dto.AdditionalStuffInfoDTO;
+import org.innovect.assignment.model.AdditionalStuffInfo;
+import org.innovect.assignment.repository.AdditionalStuffRepository;
 import org.innovect.assignment.service.IngredientInventory;
-import org.innovect.assignment.utils.PizzaShopConstants;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -25,7 +25,6 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 
 @SpringBootTest
 @RunWith(SpringRunner.class)
@@ -39,38 +38,64 @@ public class IngredientContollerUnitTest {
 	@MockBean
 	private IngredientInventory ingredientInventory;
 
+	@MockBean
+	private AdditionalStuffRepository additionalStuffRepository;
+
 	@Before
 	public void setup() throws Exception {
 		this.mockMvc = standaloneSetup(this.ingredientContoller).build();
 	}
 
 	@Test
-	public void addAdditionalStuffTest() throws Exception {
-		List<AdditionalStuffInfoDTO> additionalStuffDTOList = new Gson().fromJson(
-				new Gson().toJson(AdditionalStuffInfoListData.createAdditionalStuffInfoList()),
-				new TypeToken<ArrayList<AdditionalStuffInfoDTO>>() {
-				}.getType());
-		when(ingredientInventory.saveAndUpdateIngredientBatch(additionalStuffDTOList))
-				.thenReturn(PizzaShopConstants.SUCCESSFUL_OPERATION);
-
-		mockMvc.perform(
-				MockMvcRequestBuilders.post("/api/ingredients").content(new Gson().toJson(additionalStuffDTOList))
-						.contentType(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON))
-				.andExpect(status().isOk()).andDo(print());
-	}
-
-
-	@Test
-	public void getAllStuffInfoTest() throws Exception {
-		List<AdditionalStuffInfoDTO> additionalStuffDTOList = new Gson().fromJson(
-				new Gson().toJson(AdditionalStuffInfoListData.createAdditionalStuffInfoList()),
-				new TypeToken<ArrayList<AdditionalStuffInfoDTO>>() {
-				}.getType());
-
-		when(ingredientInventory.getAllIngredient()).thenReturn(additionalStuffDTOList);
-		
+	public void getAllIngredientTest() throws Exception {
+		when(ingredientInventory.getAllIngredient()).thenReturn(createIngredientList());
 		mockMvc.perform(get("/api/ingredients").contentType(MediaType.APPLICATION_JSON)).andExpect(status().isOk())
 				.andDo(print()).andReturn();
+	}
+
+	@Test
+	public void getAllIngredientByIdTest() throws Exception {
+		when(ingredientInventory.getIngredientById("Test1 Ingredient")).thenReturn(createIngredient());
+		mockMvc.perform(get("/api/ingredients/Test1 Ingredient").contentType(MediaType.APPLICATION_JSON))
+				.andExpect(status().isOk()).andDo(print()).andReturn();
+	}
+
+	@Test
+	public void createNewIngredientTest() throws Exception {
+		String payload = new Gson().toJson(createIngredient());
+		AdditionalStuffInfoDTO additionalStuffInfoDTO = createIngredient();
+		when(ingredientInventory.saveAndUpdateIngredient(additionalStuffInfoDTO)).thenReturn(additionalStuffInfoDTO);
+		mockMvc.perform(MockMvcRequestBuilders.post("/api/ingredients").content(payload)
+				.contentType(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON))
+				.andExpect(status().isCreated()).andDo(print());
+	}
+
+	@Test
+	public void addAdditionalStuffTest() throws Exception {
+		List<AdditionalStuffInfoDTO> ingredientList = createIngredientList();
+		AdditionalStuffInfo obj1 = new Gson().fromJson(new Gson().toJson(ingredientList.get(0)),
+				AdditionalStuffInfo.class);
+		AdditionalStuffInfo obj2 = new Gson().fromJson(new Gson().toJson(ingredientList.get(1)),
+				AdditionalStuffInfo.class);
+
+		when(additionalStuffRepository.findByStuffName(ingredientList.get(0).getStuffName())).thenReturn(obj1);
+		when(additionalStuffRepository.findByStuffName(ingredientList.get(1).getStuffName())).thenReturn(obj2);
+
+		mockMvc.perform(MockMvcRequestBuilders.post("/api/ingredients/batch").content(new Gson().toJson(ingredientList))
+				.contentType(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON)).andExpect(status().isOk())
+				.andDo(print());
+	}
+
+	private AdditionalStuffInfoDTO createIngredient() {
+		return new AdditionalStuffInfoDTO("Test1 Ingredient", "Veg Toppings", 10.00, 10);
+	}
+
+	private List<AdditionalStuffInfoDTO> createIngredientList() {
+		List<AdditionalStuffInfoDTO> list = new ArrayList<>();
+		list.add(new AdditionalStuffInfoDTO("Test11 Ingredient", "Veg Toppings", 11.00, 11));
+		list.add(new AdditionalStuffInfoDTO("Test12 Ingredient", "Non-­Veg Toppings", 12.00, 12));
+		list.add(new AdditionalStuffInfoDTO("Test14 Ingredient", "crust", 14.00, 14));
+		return list;
 	}
 
 }
