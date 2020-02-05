@@ -32,12 +32,13 @@ import com.google.common.base.Preconditions;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 
 @RestController
 @RequestMapping("/api/orders")
-@Api(value = "This controller provides all pizza ordering, addition, updation, verify order Api.")
+@Api(value = "Order operations ", description = "This controller provides pizza ordering, addition, updation, verification functionalities.")
 public class OrderProcessingController {
 
 	private Logger log = LoggerFactory.getLogger(getClass());
@@ -49,26 +50,25 @@ public class OrderProcessingController {
 	private ApplicationEventPublisher eventPublisher;
 
 	@ApiOperation(value = "Provides available urls in controller.")
-    @GetMapping("/")
-    @ResponseStatus(value = HttpStatus.NO_CONTENT)
-    public void getOrderUrl(final HttpServletRequest request, final HttpServletResponse response) {
-        final String rootUri = request.getRequestURL()
-            .toString();
+	@GetMapping("/")
+	@ResponseStatus(value = HttpStatus.NO_CONTENT)
+	public void getOrderUrl(final HttpServletRequest request, final HttpServletResponse response) {
+		final String rootUri = request.getRequestURL().toString();
 
-        final URI dashboardUri = new UriTemplate("{rootUri}{resource}").expand(rootUri, "dashboard");
-        final String dashboardLink = LinkUtil.createLinkHeader(dashboardUri.toASCIIString(), "collection");
-        response.addHeader("Link1", dashboardLink);
-        
-        final URI verifyUri = new UriTemplate("{rootUri}{resource}").expand(rootUri, "verify");
-        final String verifyLink = LinkUtil.createLinkHeader(verifyUri.toASCIIString(), "collection");
-        response.addHeader("Link2", verifyLink);
+		final URI dashboardUri = new UriTemplate("{rootUri}{resource}").expand(rootUri, "dashboard");
+		final String dashboardLink = LinkUtil.createLinkHeader(dashboardUri.toASCIIString(), "collection");
+		response.addHeader("Link1", dashboardLink);
 
-        final URI submitUri = new UriTemplate("{rootUri}{resource}").expand(rootUri, "submit");
-        final String submitLink = LinkUtil.createLinkHeader(submitUri.toASCIIString(), "collection");
-        response.addHeader("Link3", submitLink);
+		final URI verifyUri = new UriTemplate("{rootUri}{resource}").expand(rootUri, "verify");
+		final String verifyLink = LinkUtil.createLinkHeader(verifyUri.toASCIIString(), "collection");
+		response.addHeader("Link2", verifyLink);
 
-    }
-    
+		final URI submitUri = new UriTemplate("{rootUri}{resource}").expand(rootUri, "submit");
+		final String submitLink = LinkUtil.createLinkHeader(submitUri.toASCIIString(), "collection");
+		response.addHeader("Link3", submitLink);
+
+	}
+
 	@ApiOperation(value = "Provides information of Pizza and related items.", response = List.class)
 	@GetMapping("/dashboard")
 	public CustomerDashboardInfoDTO getPizzaAndExtraInfo() {
@@ -80,9 +80,10 @@ public class OrderProcessingController {
 
 	@ApiOperation(value = "Validates pizza order", response = String.class)
 	@ApiResponses(value = { @ApiResponse(code = 200, message = "Successfully verified order."),
-			@ApiResponse(code = 400, message = "Specifies system generated error.") })
+			@ApiResponse(code = 500, message = "Specifies system generated error.") })
 	@PatchMapping("/verify")
-	public String verifyOrder(@RequestBody @Valid SubmitOrderPostDTO submitOrderPostDTO) {
+	public String verifyOrder(
+			@ApiParam("Order containing list of pizzas and other ingredients like toppings, crust, sides etc.") @RequestBody @Valid SubmitOrderPostDTO submitOrderPostDTO) {
 		Preconditions.checkNotNull(submitOrderPostDTO);
 		pizzaFactory.verifyOrder(submitOrderPostDTO);
 		return PizzaShopConstants.SUCCESSFUL_OPERATION;
@@ -91,8 +92,9 @@ public class OrderProcessingController {
 	@ApiOperation(value = "Fetch order of end user using unique order id.", response = String.class)
 	@ApiResponses(value = { @ApiResponse(code = 200, message = "Successfull order submit."),
 			@ApiResponse(code = 500, message = "Specifies system generated error.") })
-	@GetMapping("/submit")
-	public SubmitOrderPostDTO getOrder(@PathVariable String orderId) {
+	@GetMapping("/submit/{orderId}")
+	public SubmitOrderPostDTO getOrder(
+			@ApiParam("Unique system generated order id to fetch how many pizza, sides, toppings have been ordered etc.") @PathVariable String orderId) {
 		Preconditions.checkNotNull(orderId);
 		SubmitOrderPostDTO orderObj = pizzaFactory.getOrderById(orderId);
 		log.info("Order successfully fetched.", orderObj.toString());
@@ -104,7 +106,8 @@ public class OrderProcessingController {
 			@ApiResponse(code = 400, message = "Specifies system generated error.") })
 	@PostMapping("/submit")
 	@ResponseStatus(HttpStatus.CREATED)
-	public SubmitOrderPostDTO submitOrder(@RequestBody @Valid SubmitOrderPostDTO submitOrderPostDTO,
+	public SubmitOrderPostDTO submitOrder(
+			@ApiParam("Saving order information which contains pizza, sides, crust, toppings etc") @RequestBody @Valid SubmitOrderPostDTO submitOrderPostDTO,
 			final HttpServletResponse response) {
 		Preconditions.checkNotNull(submitOrderPostDTO);
 		SubmitOrderPostDTO savedObj = pizzaFactory.submitOrder(submitOrderPostDTO);

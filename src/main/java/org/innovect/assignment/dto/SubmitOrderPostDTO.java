@@ -23,6 +23,18 @@ public class SubmitOrderPostDTO {
 
 	private List<OrderSidesDTO> sideOrderList;
 	
+	public SubmitOrderPostDTO() {}
+	
+	public SubmitOrderPostDTO(String orderId, @NotEmpty(message = "Customer name is required.") String custName,
+			@NotEmpty(message = "Contact number is required.") String contactNumber,
+			@NotEmpty(message = "Correct delivery address is required.") String deliveryAddress) {
+		super();
+		this.orderId = orderId;
+		this.custName = custName;
+		this.contactNumber = contactNumber;
+		this.deliveryAddress = deliveryAddress;
+	}
+
 	public String getOrderId() {
 		return orderId;
 	}

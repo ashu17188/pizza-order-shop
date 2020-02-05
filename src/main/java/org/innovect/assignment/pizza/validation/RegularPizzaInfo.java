@@ -28,7 +28,8 @@ public class RegularPizzaInfo implements PizzaInfoStrategy {
 	 */
 	public String validatePizza(OrderPizza orderPizza, List<String> unavailableStuffNameList) {
 		AtomicInteger nonVegToppingsCount = new AtomicInteger(0);
-
+		AtomicInteger crustCount = new AtomicInteger(0);
+		
 		if (StringUtils.isEmpty(orderPizza.getOrderAdditionalStuffList())) {
 			return PizzaShopConstants.SUCCESSFUL_OPERATION;
 		}
@@ -40,7 +41,7 @@ public class RegularPizzaInfo implements PizzaInfoStrategy {
 			if (stuff.getOrderedQuantity() == 0) {
 				throw new RuntimeException(stuff.getStuffName() + " has zero quantity ordered.");
 			}
-
+			
 			// Vegetarian pizza Validations
 			if (orderPizza.getPizzaCategory().equalsIgnoreCase(PizzaInfoCategoryEnum.VEGETARIAN_PIZZA.getCategory())) {
 				// Vegetarian pizza cannot have a non-­vegetarian topping.
@@ -70,7 +71,12 @@ public class RegularPizzaInfo implements PizzaInfoStrategy {
 					}
 				}
 			}
-
+			if (stuff.getStuffCategory().equalsIgnoreCase(AdditionalStuffCategoryEnum.CRUST.toString())) {
+				crustCount.getAndIncrement();
+				if (crustCount.get() == 2) {
+					throw new RuntimeException("Only one type of crust can be selected for any pizza");
+				}
+			}
 		});
 		return PizzaShopConstants.SUCCESSFUL_OPERATION;
 	}

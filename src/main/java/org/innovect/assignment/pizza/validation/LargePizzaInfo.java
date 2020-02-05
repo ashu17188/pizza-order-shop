@@ -2,6 +2,7 @@ package org.innovect.assignment.pizza.validation;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import org.innovect.assignment.model.AdditionalStuffCategoryEnum;
 import org.innovect.assignment.model.OrderAdditionalStuff;
@@ -28,6 +29,7 @@ public class LargePizzaInfo implements PizzaInfoStrategy {
 		if (StringUtils.isEmpty(orderPizza.getOrderAdditionalStuffList())) {
 			return PizzaShopConstants.SUCCESSFUL_OPERATION;
 		}
+		AtomicInteger crustCount = new AtomicInteger(0);
 
 		// Decending order sort according to Stuff price
 		Collections.sort(orderPizza.getOrderAdditionalStuffList(), (x, y) -> {
@@ -47,6 +49,12 @@ public class LargePizzaInfo implements PizzaInfoStrategy {
 						.equalsIgnoreCase(AdditionalStuffCategoryEnum.VEG_TOPPINGS.getCategory())
 						&& additionStuffList.get(i).getStuffName().equalsIgnoreCase("Paneer")) {
 					throw new RuntimeException("Non-­vegetarian pizza cannot have paneer toppings.");
+				}
+			}
+			if (additionStuffList.get(i).getStuffCategory().equalsIgnoreCase(AdditionalStuffCategoryEnum.CRUST.toString())) {
+				crustCount.getAndIncrement();
+				if (crustCount.get() == 2) {
+					throw new RuntimeException("Only one type of crust can be selected for any pizza");
 				}
 			}
 		}

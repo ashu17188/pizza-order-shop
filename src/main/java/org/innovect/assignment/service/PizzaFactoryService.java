@@ -10,6 +10,9 @@ import javax.transaction.Transactional;
 
 import org.innovect.assignment.dto.AdditionalStuffInfoDTO;
 import org.innovect.assignment.dto.CustomerDashboardInfoDTO;
+import org.innovect.assignment.dto.OrderAdditionalStuffDTO;
+import org.innovect.assignment.dto.OrderPizzaDTO;
+import org.innovect.assignment.dto.OrderSidesDTO;
 import org.innovect.assignment.dto.PizzaInfoDTO;
 import org.innovect.assignment.dto.SubmitOrderPostDTO;
 import org.innovect.assignment.model.AdditionalStuffInfo;
@@ -130,7 +133,11 @@ public class PizzaFactoryService implements PizzaFactory {
 	@Transactional
 	public SubmitOrderPostDTO getOrderById(String orderId) {
 		Order order = orderRepository.findById(orderId).orElse(null);
-		return new Gson().fromJson(new Gson().toJson(order), SubmitOrderPostDTO.class);
+		SubmitOrderPostDTO submitOrderPostDTO = new SubmitOrderPostDTO(order.getOrderId(), order.getCustName(),
+				order.getContactNumber(), order.getDeliveryAddress());
+		submitOrderPostDTO.setOrderPizzaDTOList(createPizzaDTOList(order.getPizzaList()));
+		submitOrderPostDTO.setSideOrderList(createOrderSidesDTOList(order.getSideOrderList()));
+		return submitOrderPostDTO;
 	}
 
 	@Override
@@ -260,5 +267,41 @@ public class PizzaFactoryService implements PizzaFactory {
 		quantity = additionalStuffInfo.getStockQuantity() - orderSides.getOrderedQuantity();
 
 		return quantity;
+	}
+
+	private List<OrderPizzaDTO> createPizzaDTOList(List<OrderPizza> orderPizzaList) {
+		List<OrderPizzaDTO> pizzaDTOList = new ArrayList<>();
+		for (OrderPizza orderPizza : orderPizzaList) {
+			OrderPizzaDTO orderPizzaDTO = new OrderPizzaDTO(orderPizza.getPizzaName(), orderPizza.getPizzaCategory(),
+					orderPizza.getPizzaSize(), orderPizza.getPrice(), orderPizza.getCrust(),
+					createAdditionalStuffDTOList(orderPizza.getOrderAdditionalStuffList()));
+			pizzaDTOList.add(orderPizzaDTO);
+		}
+		return pizzaDTOList;
+	}
+
+	private List<OrderAdditionalStuffDTO> createAdditionalStuffDTOList(
+			List<OrderAdditionalStuff> orderAdditionalStuffList) {
+		List<OrderAdditionalStuffDTO> orderStuffDTOList = new ArrayList<>();
+		for (OrderAdditionalStuff orderAdditionalStuff : orderAdditionalStuffList) {
+			OrderAdditionalStuffDTO orderAdditionalStuffDTO = new OrderAdditionalStuffDTO(
+					orderAdditionalStuff.getStuffName(), orderAdditionalStuff.getStuffCategory(),
+					orderAdditionalStuff.getPrice(), orderAdditionalStuff.getOrderedQuantity());
+
+			orderStuffDTOList.add(orderAdditionalStuffDTO);
+		}
+		return orderStuffDTOList;
+	}
+
+	private List<OrderSidesDTO> createOrderSidesDTOList(List<OrderSides> orderSidesList) {
+		List<OrderSidesDTO> orderSidesDTOList = new ArrayList<>();
+		for (OrderSides orderSides : orderSidesList) {
+			OrderSidesDTO orderSidesDTO = new OrderSidesDTO();
+			orderSidesDTO.setSideName(orderSides.getSideName());
+			orderSidesDTO.setPrice(orderSides.getPrice());
+			orderSidesDTO.setOrderedQuantity(orderSides.getOrderedQuantity());
+			orderSidesDTOList.add(orderSidesDTO);
+		}
+		return orderSidesDTOList;
 	}
 }

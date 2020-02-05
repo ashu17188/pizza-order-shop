@@ -36,13 +36,14 @@ import com.google.common.base.Preconditions;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 
 @RestController
 @RequestMapping("/api")
 @EnableHypermediaSupport(type = HypermediaType.HAL)
-@Api(value = "This controller provides all pizza fetching, addition, updation functionalities from inventory.")
+@Api(value = "Pizza Operations", description = "This controller provides all pizza fetching, addition, updation functionalities from inventory.")
 public class PizzaInfoController {
 
 	private Logger log = LoggerFactory.getLogger(getClass());
@@ -53,7 +54,7 @@ public class PizzaInfoController {
 	@Autowired
 	private PizzaInventory pizzaInventory;
 
-	@ApiOperation(value = "Api used to get Pizza information only.", notes = "Returns Pizzas available in inventory.")
+	@ApiOperation(value = "Api used to get all Pizza information available in inventory.", response = List.class)
 	@GetMapping(value = "/pizzas", produces = { "application/hal+json" })
 	public Resources<PizzaInfoDTO> getAllPizza() {
 		List<PizzaInfoDTO> pizzaList = pizzaInventory.getAllPizza();
@@ -76,11 +77,11 @@ public class PizzaInfoController {
 		return result;
 	}
 
-	@ApiOperation(value = "Fetch Pizza present in inventory", response = String.class)
-	@ApiResponses(value = { @ApiResponse(code = 200, message = "Information of Pizza updated."),
-			@ApiResponse(code = 500, message = "Specifies system generated error for not able to add pizza.") })
+	@ApiOperation(value = "Fetches Pizza present in inventory", response = String.class)
+	@ApiResponses(value = { @ApiResponse(code = 200, message = "Information of Pizza updated.") })
 	@GetMapping("/pizzas/{pizzaId}")
-	public PizzaInfoDTO getPizzaInventoryById(@PathVariable Integer pizzaId) {
+	public PizzaInfoDTO getPizzaInventoryById(
+			@ApiParam("Unique pizza id for fetching Pizza information.") @PathVariable Integer pizzaId) {
 		RestPreconditions.check(pizzaId, null, "Pizza id can not be empty.");
 		PizzaInfoDTO pizzaDTO = pizzaInventory.getPizzaById(pizzaId);
 		RestPreconditions.check(pizzaDTO, null, null);
@@ -93,7 +94,9 @@ public class PizzaInfoController {
 			@ApiResponse(code = 500, message = "Specifies system generated error for not able to add pizza.") })
 	@PostMapping("/pizzas")
 	@ResponseStatus(HttpStatus.CREATED)
-	public PizzaInfoDTO addPizza(@RequestBody @Valid PizzaInfoDTO pizzaInfoDTO, final HttpServletResponse response) {
+	public PizzaInfoDTO addPizza(
+			@ApiParam("Pizza containing all required information for saving in inventory.") @RequestBody @Valid PizzaInfoDTO pizzaInfoDTO,
+			final HttpServletResponse response) {
 		Preconditions.checkNotNull(pizzaInfoDTO);
 		PizzaInfoDTO savedObj = pizzaInventory.saveAndUpdatePizza(pizzaInfoDTO);
 		final long idOfCreatedResource = savedObj.getPizzaInfoId();
@@ -106,7 +109,8 @@ public class PizzaInfoController {
 	@ApiResponses(value = { @ApiResponse(code = 200, message = "Information of Pizza updated."),
 			@ApiResponse(code = 500, message = "Specifies system generated error for not able to add pizza.") })
 	@PutMapping("/pizzas")
-	public PizzaInfoDTO updatePizzaInfoInventory(@RequestBody @Valid PizzaInfoDTO pizzaInfoDTO) {
+	public PizzaInfoDTO updatePizzaInfoInventory(
+			@ApiParam("Pizza containing all required information for updation in inventory.") @RequestBody @Valid PizzaInfoDTO pizzaInfoDTO) {
 		RestPreconditions.check(pizzaInfoDTO, null, "resouce can not be null.");
 		return pizzaInventory.saveAndUpdatePizza(pizzaInfoDTO);
 	}
@@ -115,7 +119,8 @@ public class PizzaInfoController {
 	@ApiResponses(value = { @ApiResponse(code = 200, message = "Information of Pizza updated."),
 			@ApiResponse(code = 500, message = "Specifies system generated error for not able to add pizza.") })
 	@DeleteMapping("/pizzas/{pizzaId}")
-	public ResponseEntity<?> deletePizzaInfoInventory(@PathVariable Integer pizzaId) {
+	public ResponseEntity<?> deletePizzaInfoInventory(
+			@ApiParam("Unique pizza id to delete particular pizza from inventory.") @PathVariable Integer pizzaId) {
 		RestPreconditions.check(pizzaId, null, "pizza id can not be null.");
 		pizzaInventory.deletePizza(pizzaId);
 		return new ResponseEntity<>(HttpStatus.OK);
@@ -125,7 +130,8 @@ public class PizzaInfoController {
 	@ApiResponses(value = { @ApiResponse(code = 200, message = "New Pizza additional successful."),
 			@ApiResponse(code = 500, message = "Specifies system generated error.") })
 	@PostMapping("/pizzas/batch")
-	public String addAndUpdatePizzaBatch(@RequestBody @Valid List<PizzaInfoDTO> pizzaInfoDTOList) {
+	public String addAndUpdatePizzaBatch(
+			@ApiParam("List of pizza for updation and addition in on operation.") @RequestBody @Valid List<PizzaInfoDTO> pizzaInfoDTOList) {
 		RestPreconditions.check(pizzaInfoDTOList, null, "pizza list can not be null");
 		return pizzaInventory.addAndUpdatePizzaBatch(pizzaInfoDTOList);
 	}

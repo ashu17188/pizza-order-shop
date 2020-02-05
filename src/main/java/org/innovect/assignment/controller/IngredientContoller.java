@@ -36,12 +36,13 @@ import com.google.common.base.Preconditions;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 
 @RestController
 @RequestMapping("/api")
-@Api(value = "This controller provides all ingredient fetching, addition, updation functionalities from inventory.")
+@Api(value = "Ingredient operations", description = "This controller provides operations regarding fetching, addition, updation of Ingredients (i.e toppings, sides, crust etc) from inventory.")
 public class IngredientContoller {
 
 	private Logger log = LoggerFactory.getLogger(getClass());
@@ -80,9 +81,11 @@ public class IngredientContoller {
 
 	@ApiOperation(value = "Api used to get Ingredient by ingredient name.", response = AdditionalStuffInfoDTO.class)
 	@GetMapping("/ingredients/{name}")
-	public AdditionalStuffInfoDTO getIngredientById(@PathVariable(value = "name") String name) {
-		if(StringUtils.isEmpty(name))throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"Ingredient name is required.");
-		
+	public AdditionalStuffInfoDTO getIngredientById(
+			@ApiParam("Unique name of ingredient like Black olive, Barbeque chicken etc.") @PathVariable(value = "name") String name) {
+		if (StringUtils.isEmpty(name))
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Ingredient name is required.");
+
 		AdditionalStuffInfoDTO additionalStuffInfoDTO = ingredientInventory.getIngredientById(name);
 		RestPreconditions.check(additionalStuffInfoDTO, null, null);
 		log.info("Ingredient fetched successfully. {}", additionalStuffInfoDTO.toString());
@@ -92,7 +95,10 @@ public class IngredientContoller {
 	@ApiOperation(value = "Api used to save Ingredient.", response = AdditionalStuffInfoDTO.class)
 	@PostMapping("/ingredients")
 	@ResponseStatus(HttpStatus.CREATED)
-	public AdditionalStuffInfoDTO saveIngredient(@RequestBody @Valid AdditionalStuffInfoDTO additionalStuffInfoDTO,
+	public AdditionalStuffInfoDTO saveIngredient(
+			@ApiParam("Ingredient containing all required information for creating new Ingredient like "
+					+ "name=Barbeque chicken, category=Non-­Veg Toppings/Veg Toppings, Price in Dollar=45.0, "
+					+ "Quantity=10") @RequestBody @Valid AdditionalStuffInfoDTO additionalStuffInfoDTO,
 			final HttpServletResponse response) {
 		Preconditions.checkNotNull(additionalStuffInfoDTO);
 		AdditionalStuffInfoDTO savedObj = ingredientInventory.saveAndUpdateIngredient(additionalStuffInfoDTO);
@@ -103,9 +109,12 @@ public class IngredientContoller {
 		return savedObj;
 	}
 
-	@ApiOperation(value = "Api used to Ingredient in repository.", response = AdditionalStuffInfoDTO.class)
+	@ApiOperation(value = "Api used to update Ingredient information in inventory.", response = AdditionalStuffInfoDTO.class)
 	@PutMapping("/ingredients")
-	public AdditionalStuffInfoDTO updateIngredient(@RequestBody @Valid AdditionalStuffInfoDTO additionalStuffInfoDTO) {
+	public AdditionalStuffInfoDTO updateIngredient(
+			@ApiParam("Ingredient containing all required information for creating new Ingredient like "
+					+ "name=Barbeque chicken, category=Non-­Veg Toppings/Veg Toppings, Price in Dollar=45.0, "
+					+ "Quantity=10") @RequestBody @Valid AdditionalStuffInfoDTO additionalStuffInfoDTO) {
 		Preconditions.checkNotNull(additionalStuffInfoDTO);
 		AdditionalStuffInfoDTO updatedObj = ingredientInventory.saveAndUpdateIngredient(additionalStuffInfoDTO);
 		log.info("Ingredient with id ={} updated successfully.", updatedObj.getStuffName());
@@ -113,9 +122,10 @@ public class IngredientContoller {
 
 	}
 
-	@ApiOperation(value = "Api used to Ingredient in repository.", response = AdditionalStuffInfoDTO.class)
+	@ApiOperation(value = "Api used to delete Ingredient in repository.", response = AdditionalStuffInfoDTO.class)
 	@DeleteMapping("/ingredients/{name}")
-	public ResponseEntity<?> deleteIngredient(@PathVariable String name) {
+	public ResponseEntity<?> deleteIngredient(
+			@ApiParam("Unique name of ingredient like Black olive") @PathVariable String name) {
 		if (StringUtils.isEmpty(name))
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Ingredient name is required");
 		ingredientInventory.deleteIngredient(name);
@@ -123,11 +133,12 @@ public class IngredientContoller {
 		return new ResponseEntity<>(HttpStatus.OK);
 	}
 
-	@ApiOperation(value = "Create additional stuff for a Pizza order", response = String.class)
+	@ApiOperation(value = "Create and update number of ingredients in batch.", response = String.class)
 	@ApiResponses(value = { @ApiResponse(code = 200, message = "Successful addition of additional stuff like."),
 			@ApiResponse(code = 400, message = "Specifies system generated error.") })
 	@PostMapping("/ingredients/batch")
-	public String saveAndUpdateIngredientBatch(@RequestBody List<AdditionalStuffInfoDTO> additionalStuffInfoDTOList) {
+	public String saveAndUpdateIngredientBatch(
+			@ApiParam("List of ingredients for save or update in inventory.") @RequestBody List<AdditionalStuffInfoDTO> additionalStuffInfoDTOList) {
 		Preconditions.checkNotNull(additionalStuffInfoDTOList);
 		String response = ingredientInventory.saveAndUpdateIngredientBatch(additionalStuffInfoDTOList);
 		log.info("Batch save and update of ingredients completed successfully.");
