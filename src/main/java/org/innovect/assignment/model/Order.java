@@ -12,7 +12,6 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
-import javax.persistence.Transient;
 
 import org.hibernate.annotations.GenericGenerator;
 import org.innovect.assignment.pizza.validation.LargePizzaInfo;
@@ -21,11 +20,9 @@ import org.innovect.assignment.pizza.validation.PizzaInfoStrategy;
 import org.innovect.assignment.pizza.validation.RegularPizzaInfo;
 import org.innovect.assignment.utils.PizzaShopConstants;
 import org.springframework.beans.BeansException;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.stereotype.Service;
-import org.springframework.web.context.support.SpringBeanAutowiringSupport;
 
 @Entity
 @Table(name = "order_main")
@@ -97,7 +94,6 @@ public class Order extends TackingInfo implements Serializable, ApplicationConte
 		}
 		getPizzaList().add(orderPizza);
 		this.totalAmountToPay += orderPizza.getPrice();
-
 		return PizzaShopConstants.SUCCESSFUL_OPERATION;
 	}
 

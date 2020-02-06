@@ -86,6 +86,7 @@ public class OrderProcessingController {
 			@ApiParam("Order containing list of pizzas and other ingredients like toppings, crust, sides etc.") @RequestBody @Valid SubmitOrderPostDTO submitOrderPostDTO) {
 		Preconditions.checkNotNull(submitOrderPostDTO);
 		pizzaFactory.verifyOrder(submitOrderPostDTO);
+		log.info("Order containing pizza has been verified.");
 		return PizzaShopConstants.SUCCESSFUL_OPERATION;
 	}
 
@@ -113,6 +114,8 @@ public class OrderProcessingController {
 		SubmitOrderPostDTO savedObj = pizzaFactory.submitOrder(submitOrderPostDTO);
 		final String idOfCreatedResource = savedObj.getOrderId();
 		eventPublisher.publishEvent(new ResourceCreatedEvent(this, response, idOfCreatedResource));
+		log.info("Order with order id: {} , pizza count :{} , sides count:{} saved successfully.", idOfCreatedResource,
+				submitOrderPostDTO.getOrderPizzaDTOList().size(), submitOrderPostDTO.getSideOrderList().size());
 		return savedObj;
 	}
 

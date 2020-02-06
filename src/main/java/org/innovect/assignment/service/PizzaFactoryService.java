@@ -98,7 +98,8 @@ public class PizzaFactoryService implements PizzaFactory {
 
 		order = addPizzaToOrder(order, orderPizzaList, unavailablePizzaNameList, unavailableStuffNameList);
 		order = addSidesToOrder(order, orderSidesList, unavailablePizzaNameList, unavailableStuffNameList);
-
+		log.info("Order from customer name:{} at {} verified succesfully.", order.getCustName(),
+				order.getCreatedDate());
 		return order;
 	}
 
@@ -180,8 +181,6 @@ public class PizzaFactoryService implements PizzaFactory {
 	}
 
 	/**
-	 * This method is
-	 * 
 	 * @param orderAdditionalStuffList additional stuff passed during order submit.
 	 * @param orderSidesList           side list passed during order submit.
 	 * @return SUCCESSFUL if after order processing inventory is successfully

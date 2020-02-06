@@ -9,6 +9,8 @@ import org.innovect.assignment.dto.PizzaInfoDTO;
 import org.innovect.assignment.model.PizzaInfo;
 import org.innovect.assignment.repository.PizzaInfoRepository;
 import org.innovect.assignment.utils.PizzaShopConstants;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
@@ -19,6 +21,8 @@ import com.google.gson.reflect.TypeToken;
 
 @Service
 public class PizzaInfoService implements PizzaInventory {
+
+	private Logger log = LoggerFactory.getLogger(getClass());
 
 	@Autowired
 	private PizzaInfoRepository pizzaInfoRepository;
@@ -48,8 +52,10 @@ public class PizzaInfoService implements PizzaInventory {
 			objFromDB.setPizzaCategory(pizzaInfoDTO.getPizzaCategory());
 			objFromDB.setPizzaSize(pizzaInfoDTO.getPizzaSize());
 			objFromDB.setPizzaName(pizzaInfoDTO.getPizzaName());
+			log.info("Pizza to be updated in inventory. {}", objFromDB.toString());
 		} else {
 			objFromDB = new Gson().fromJson(new Gson().toJson(pizzaInfoDTO), PizzaInfo.class);
+			log.info("Pizza to be added in inventory. {}", objFromDB.toString());
 		}
 
 		PizzaInfo pizzaObjFromDB = pizzaInfoRepository.save(objFromDB);
@@ -62,6 +68,7 @@ public class PizzaInfoService implements PizzaInventory {
 		PizzaInfo pizzaInfo = new PizzaInfo();
 		pizzaInfo.setPizzaInfoId(pizzaId);
 		pizzaInfoRepository.delete(pizzaInfo);
+		log.info("Pizza with id :{}  deleted successfully.", pizzaId);
 	}
 
 	@Override
@@ -87,7 +94,7 @@ public class PizzaInfoService implements PizzaInventory {
 			}
 		}
 		pizzaInfoRepository.saveAll(pizzaInfoList);
-
+		log.info("Pizza batch operation successful.");
 		return PizzaShopConstants.SUCCESSFUL_OPERATION;
 	}
 

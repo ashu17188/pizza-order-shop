@@ -133,6 +133,8 @@ public class PizzaInfoController {
 	public String addAndUpdatePizzaBatch(
 			@ApiParam("List of pizza for updation and addition in on operation.") @RequestBody @Valid List<PizzaInfoDTO> pizzaInfoDTOList) {
 		RestPreconditions.check(pizzaInfoDTOList, null, "pizza list can not be null");
-		return pizzaInventory.addAndUpdatePizzaBatch(pizzaInfoDTOList);
+		String response = pizzaInventory.addAndUpdatePizzaBatch(pizzaInfoDTOList);
+		log.info("Pizza with count : {} successfully batch processed.",pizzaInfoDTOList.size());
+		return response;
 	}
 }

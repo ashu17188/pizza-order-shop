@@ -5,12 +5,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.setup.MockMvcBuilders.standaloneSetup;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.innovect.assignment.data.NormalOrderData;
-import org.innovect.assignment.dto.AdditionalStuffInfoDTO;
-import org.innovect.assignment.model.AdditionalStuffCategoryEnum;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;

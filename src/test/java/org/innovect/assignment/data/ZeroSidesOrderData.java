@@ -17,6 +17,7 @@ public class ZeroSidesOrderData {
 	public static SubmitOrderPostDTO createSubmitOrderPostDTOObject(){
 		SubmitOrderPostDTO submitOrderPostDTO = new SubmitOrderPostDTO();
 		submitOrderPostDTO.setCustName("David Johnson");
+		submitOrderPostDTO.setOrderId("80870b18-a3c6-49c8-93cd-3ad631ebda2d");
 		submitOrderPostDTO.setContactNumber("+91-8989161123");
 		submitOrderPostDTO.setDeliveryAddress("K-10, BINAWAT TOWNSHIP, HADAPSAR PUNE-411028(M.H)");
 		
