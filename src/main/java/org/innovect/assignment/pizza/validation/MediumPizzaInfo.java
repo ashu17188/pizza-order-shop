@@ -91,7 +91,7 @@ public class MediumPizzaInfo implements PizzaInfoStrategy {
 		if (orderPizza.getPizzaCategory().equalsIgnoreCase(PizzaInfoCategoryEnum.NON_VEGETARIAN.getCategory())) {
 			// Vegetarian pizza cannot have a non-­vegetarian topping.;
 			if (stuff.getStuffCategory().equalsIgnoreCase(AdditionalStuffCategoryEnum.VEG_TOPPINGS.getCategory())
-					&& stuff.getStuffName().equalsIgnoreCase("Paneer")) {
+					&& stuff.getStuffName().equalsIgnoreCase(PizzaShopConstants.PANEER_TOPPINGS)) {
 				throw new RuntimeException("Non-­vegetarian pizza cannot have paneer toppings.");
 			}
 

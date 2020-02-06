@@ -10,12 +10,15 @@ import org.innovect.assignment.data.MoreThanOneCrustMediumOrderData;
 import org.innovect.assignment.data.MoreThanOneCrustRegularOrderData;
 import org.innovect.assignment.data.NonVegPizzaPaneerToppingsOrderData;
 import org.innovect.assignment.data.NonVegPizzaWithTwoNonVegToppingsOrderData;
+import org.innovect.assignment.data.NonVegWithPaneerRegular;
 import org.innovect.assignment.data.NormalOrderData;
 import org.innovect.assignment.data.OutOfStockAdditionalStuffOrderData;
 import org.innovect.assignment.data.OutOfStockPizzaOrderData;
 import org.innovect.assignment.data.OutOfStockSidesOrderData;
 import org.innovect.assignment.data.RegularAndMediumPizzaOrderData;
 import org.innovect.assignment.data.VegPizzaNonVegToppingsOrderData;
+import org.innovect.assignment.data.VegWithNonVegToppingsMediumOrder;
+import org.innovect.assignment.data.VegWithNonVegToppingsRegularOrder;
 import org.innovect.assignment.data.ZeroAdditionalStuffOrderData;
 import org.innovect.assignment.data.ZeroSidesOrderData;
 import org.innovect.assignment.dto.AdditionalStuffInfoDTO;
@@ -227,9 +230,7 @@ public class PizzaFactoryServiceTest {
 		Assert.assertEquals(stuffAdditionResponse, PizzaShopConstants.SUCCESSFUL_OPERATION);
 
 		SubmitOrderPostDTO submitOrderPostDTO = OutOfStockAdditionalStuffOrderData.createSubmitOrderPostDTOObject();
-		SubmitOrderPostDTO response = pizzaFactory.submitOrder(submitOrderPostDTO);
-		Assert.assertEquals(submitOrderPostDTO, response);
-
+		pizzaFactory.submitOrder(submitOrderPostDTO);
 	}
 
 	/*
@@ -245,8 +246,7 @@ public class PizzaFactoryServiceTest {
 		Assert.assertEquals(stuffAdditionResponse, PizzaShopConstants.SUCCESSFUL_OPERATION);
 
 		SubmitOrderPostDTO submitOrderPostDTO = OutOfStockSidesOrderData.createSubmitOrderPostDTOObject();
-		SubmitOrderPostDTO response = pizzaFactory.submitOrder(submitOrderPostDTO);
-		Assert.assertEquals(submitOrderPostDTO, response);
+		pizzaFactory.submitOrder(submitOrderPostDTO);
 	}
 
 	/**
@@ -297,6 +297,33 @@ public class PizzaFactoryServiceTest {
 		SubmitOrderPostDTO response = pizzaFactory.submitOrder(submitOrderPostDTO);
 		SubmitOrderPostDTO objFetchFromDB = pizzaFactory.getOrderById(response.getOrderId());
 		Assert.assertEquals(response.getOrderId(), objFetchFromDB.getOrderId());
+	}
+
+	/**
+	 * This test Medium Non Veg pizza does not have Paneer toppings.
+	 */
+	@Test(expected = RuntimeException.class)
+	public void nonVegRegularTest() {
+		SubmitOrderPostDTO submitOrderPostDTO = NonVegWithPaneerRegular.createSubmitOrderPostDTOObject();
+		pizzaFactory.verifyOrder(submitOrderPostDTO);
+	}
+
+	/**
+	 * This test Regular Veg pizza with non veg toppings.
+	 */
+	@Test(expected = RuntimeException.class)
+	public void VegRegularWithNonVegToppingsTest() {
+		SubmitOrderPostDTO submitOrderPostDTO = VegWithNonVegToppingsRegularOrder.createSubmitOrderPostDTOObject();
+		pizzaFactory.verifyOrder(submitOrderPostDTO);
+	}
+
+	/**
+	 * This test Medium Veg pizza with non veg toppings.
+	 */
+	@Test(expected = RuntimeException.class)
+	public void VegMediumWithNonVegToppingsTest() {
+		SubmitOrderPostDTO submitOrderPostDTO = VegWithNonVegToppingsMediumOrder.createSubmitOrderPostDTOObject();
+		pizzaFactory.verifyOrder(submitOrderPostDTO);
 	}
 
 }

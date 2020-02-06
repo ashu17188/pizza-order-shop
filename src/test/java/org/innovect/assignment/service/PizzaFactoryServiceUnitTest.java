@@ -4,11 +4,16 @@ import static org.mockito.Mockito.when;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import org.innovect.assignment.AppRunner;
 import org.innovect.assignment.data.AdditionalStuffInfoListData;
 import org.innovect.assignment.data.LargePizzaTwoToppingsNoCostOrderData;
+import org.innovect.assignment.data.MoreThanOneCrustLargeOrderData;
+import org.innovect.assignment.data.MoreThanOneCrustMediumOrderData;
+import org.innovect.assignment.data.MoreThanOneCrustRegularOrderData;
 import org.innovect.assignment.data.NonVegPizzaWithTwoNonVegToppingsOrderData;
+import org.innovect.assignment.data.NonVegWithPaneerRegular;
 import org.innovect.assignment.data.NormalOrderData;
 import org.innovect.assignment.data.OutOfStockAdditionalStuffOrderData;
 import org.innovect.assignment.data.OutOfStockPizzaOrderData;
@@ -16,6 +21,8 @@ import org.innovect.assignment.data.OutOfStockSidesOrderData;
 import org.innovect.assignment.data.PizzaInfoListData;
 import org.innovect.assignment.data.RegularAndMediumPizzaOrderData;
 import org.innovect.assignment.data.VegPizzaNonVegToppingsOrderData;
+import org.innovect.assignment.data.VegWithNonVegToppingsMediumOrder;
+import org.innovect.assignment.data.VegWithNonVegToppingsRegularOrder;
 import org.innovect.assignment.data.ZeroAdditionalStuffOrderData;
 import org.innovect.assignment.data.ZeroSidesOrderData;
 import org.innovect.assignment.dto.CustomerDashboardInfoDTO;
@@ -280,8 +287,7 @@ public class PizzaFactoryServiceUnitTest {
 		when(customRepository.getAdditionalStuffAvailability()).thenReturn(unavailablStuffList);
 
 		SubmitOrderPostDTO submitOrderPostDTO = OutOfStockSidesOrderData.createSubmitOrderPostDTOObject();
-		SubmitOrderPostDTO response = pizzaFactory.submitOrder(submitOrderPostDTO);
-		Assert.assertEquals(submitOrderPostDTO, response);
+		pizzaFactory.submitOrder(submitOrderPostDTO);
 	}
 
 	/**
@@ -291,4 +297,78 @@ public class PizzaFactoryServiceUnitTest {
 	public void submitNullOrderTest() {
 		 pizzaFactory.submitOrder(null);
 	}
+	
+	/**
+	 * This test verifies whether Regular Pizza contains more than one crust. Data contains Pizza with more that
+	 * 1 Crust.
+	 */
+	@Test(expected = RuntimeException.class)
+	public void verifyMoreThanOneCrustRegularTest() {
+		SubmitOrderPostDTO submitOrderPostDTO = MoreThanOneCrustRegularOrderData.createSubmitOrderPostDTOObject();
+		when(customRepository.getPizzaAvailability()).thenReturn(new ArrayList<String>());
+		when(customRepository.getAdditionalStuffAvailability()).thenReturn(new ArrayList<String>());
+		pizzaFactory.verifyOrder(submitOrderPostDTO);
+	}
+
+	/**
+	 * This test verifies whether Medium Pizza contains more than one crust. Data contains Pizza with more that
+	 * 1 Crust.
+	 */
+	@Test(expected = RuntimeException.class)
+	public void verifyMoreThanOneCrustMediumTest() {
+		SubmitOrderPostDTO submitOrderPostDTO = MoreThanOneCrustMediumOrderData.createSubmitOrderPostDTOObject();
+		when(customRepository.getPizzaAvailability()).thenReturn(new ArrayList<String>());
+		when(customRepository.getAdditionalStuffAvailability()).thenReturn(new ArrayList<String>());
+		pizzaFactory.verifyOrder(submitOrderPostDTO);
+	}
+
+	/**
+	 * This test verifies whether Large Pizza contains more than one crust. Data contains Pizza with more that
+	 * 1 Crust.
+	 */
+	@Test(expected = RuntimeException.class)
+	public void verifyMoreThanOneCrustLargeTest() {
+		SubmitOrderPostDTO submitOrderPostDTO = MoreThanOneCrustLargeOrderData.createSubmitOrderPostDTOObject();
+		when(customRepository.getPizzaAvailability()).thenReturn(new ArrayList<String>());
+		when(customRepository.getAdditionalStuffAvailability()).thenReturn(new ArrayList<String>());
+
+		pizzaFactory.verifyOrder(submitOrderPostDTO);
+	}
+	
+	/**
+	 * This test Medium Non Veg pizza does not have Paneer toppings.
+	 */
+	@Test(expected = RuntimeException.class)
+	public void nonVegRegularTest() {
+		SubmitOrderPostDTO submitOrderPostDTO = NonVegWithPaneerRegular.createSubmitOrderPostDTOObject();
+		when(customRepository.getPizzaAvailability()).thenReturn(new ArrayList<String>());
+		when(customRepository.getAdditionalStuffAvailability()).thenReturn(new ArrayList<String>());
+
+		pizzaFactory.verifyOrder(submitOrderPostDTO);
+	}
+
+	/**
+	 * This test Regular Veg pizza with non veg toppings.
+	 */
+	@Test(expected = RuntimeException.class)
+	public void VegRegularWithNonVegToppingsTest() {
+		SubmitOrderPostDTO submitOrderPostDTO = VegWithNonVegToppingsRegularOrder.createSubmitOrderPostDTOObject();
+		when(customRepository.getPizzaAvailability()).thenReturn(new ArrayList<String>());
+		when(customRepository.getAdditionalStuffAvailability()).thenReturn(new ArrayList<String>());
+
+		pizzaFactory.verifyOrder(submitOrderPostDTO);
+	}
+
+	/**
+	 * This test Medium Veg pizza with non veg toppings.
+	 */
+	@Test(expected = RuntimeException.class)
+	public void VegMediumWithNonVegToppingsTest() {
+		SubmitOrderPostDTO submitOrderPostDTO = VegWithNonVegToppingsMediumOrder.createSubmitOrderPostDTOObject();
+		when(customRepository.getPizzaAvailability()).thenReturn(new ArrayList<String>());
+		when(customRepository.getAdditionalStuffAvailability()).thenReturn(new ArrayList<String>());
+
+		pizzaFactory.verifyOrder(submitOrderPostDTO);
+	}
+
 }

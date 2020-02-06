@@ -82,25 +82,6 @@ public class LargePizzaInfo implements PizzaInfoStrategy {
 
 	}
 
-	/**
-	 * This method calculate total cost of Addition Stuff for Large Pizza
-	 * 
-	 * @param orderAdditionalStuffList Additional Stuff eg. Toppings, Side bars
-	 * @return totalAmount
-	 */
-	public double calcStuffCostLargePizza(List<OrderAdditionalStuff> orderAdditionalStuffList) {
-		double totalStuffCost = 0.0;
-		// Decending order sort according to Stuff price
-		Collections.sort(orderAdditionalStuffList, (x, y) -> {
-			return x.getPrice() > y.getPrice() ? 1 : -1;
-		});
-
-		for (int i = Integer.parseInt(freeToppings); i < orderAdditionalStuffList.size(); i++) {
-			totalStuffCost += orderAdditionalStuffList.get(i).getPrice();
-		}
-		return totalStuffCost;
-	}
-
 	@Override
 	public double calculateAdditionalCost(OrderPizza orderPizza, List<String> unavailableStuffNameList) {
 		AtomicDouble totalStuffAmount = new AtomicDouble(0.0);
