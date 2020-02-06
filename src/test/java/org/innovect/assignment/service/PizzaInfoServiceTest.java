@@ -6,6 +6,7 @@ import java.util.List;
 import org.innovect.assignment.AppRunner;
 import org.innovect.assignment.dto.PizzaInfoDTO;
 import org.innovect.assignment.model.PizzaInfoCategoryEnum;
+import org.innovect.assignment.repository.PizzaInfoRepository;
 import org.innovect.assignment.utils.PizzaShopConstants;
 import org.junit.Assert;
 import org.junit.Test;
@@ -30,6 +31,9 @@ public class PizzaInfoServiceTest {
 
 	@Autowired
 	private PizzaInventory pizzaInventory;
+
+	@Autowired
+	private PizzaInfoRepository pizzaInfoRepository;
 
 	/**
 	 * Test if all pizzas can be fetched.
@@ -95,4 +99,20 @@ public class PizzaInfoServiceTest {
 		pizzaInventory.deletePizza(0);
 	}
 
+	/*
+	 * Adding Pizza two times same pizza should not create two records.
+	 */
+	@Test
+	public void addTwoPizzaOfSameTypeTest() {
+		PizzaInfoDTO pizzaInfoDTO1 = new PizzaInfoDTO(0, "Test Pizza",
+				PizzaInfoCategoryEnum.VEGETARIAN_PIZZA.getCategory().toString(), "Regular", 505.00, 10);
+		pizzaInfoDTO1 = pizzaInventory.saveAndUpdatePizza(pizzaInfoDTO1);
+		
+		PizzaInfoDTO pizzaInfoDTO2 = new PizzaInfoDTO(0, "Test Pizza",
+				PizzaInfoCategoryEnum.VEGETARIAN_PIZZA.getCategory().toString(), "Regular", 505.00, 10);
+		pizzaInfoDTO2 = pizzaInventory.saveAndUpdatePizza(pizzaInfoDTO2);
+		
+		Assert.assertEquals(pizzaInfoDTO1.getPizzaInfoId(), pizzaInfoDTO2.getPizzaInfoId());
+
+	}
 }

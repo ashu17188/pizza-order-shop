@@ -11,4 +11,6 @@ public final class PizzaShopConstants {
 	public static final String MEDIUM_PIZZA = "Medium";
 
 	public static final String REGULAR_PIZZA = "Regular";
+
+	public static final String PANEER_TOPPINGS = "Paneer";
 }

@@ -59,8 +59,8 @@ public class PizzaInfoServiceUnitTest {
 	@Test
 	public void getAllPizzaTest() {
 		List<PizzaInfoDTO> list = new ArrayList<>();
-		list.add(new PizzaInfoDTO(0,"Test1","Vegetarian","Regular",100.00,50));
-		list.add(new PizzaInfoDTO(0,"Test2","Non Vegetarian","Large",200.00,50));
+		list.add(new PizzaInfoDTO(0, "Test1", "Vegetarian", "Regular", 100.00, 50));
+		list.add(new PizzaInfoDTO(0, "Test2", "Non Vegetarian", "Large", 200.00, 50));
 		when(pizzaInventory.getAllPizza()).thenReturn(list);
 		Assert.assertNotNull(pizzaInventory.getAllPizza());
 	}
@@ -71,8 +71,9 @@ public class PizzaInfoServiceUnitTest {
 	@Test
 	public void addOnePizzaInfoTest() {
 		PizzaInfoDTO pizzaDTO = new PizzaInfoDTO(0, "Test1", "Vegetarian", "Regular", 100.00, 50);
-		PizzaInfo objFromDB  = new Gson().fromJson(new Gson().toJson(pizzaDTO),PizzaInfo.class);
-		when(pizzaInfoRepository.save(new Gson().fromJson(new Gson().toJson(pizzaDTO), PizzaInfo.class))).thenReturn(objFromDB);
+		PizzaInfo objFromDB = new Gson().fromJson(new Gson().toJson(pizzaDTO), PizzaInfo.class);
+		when(pizzaInfoRepository.save(new Gson().fromJson(new Gson().toJson(pizzaDTO), PizzaInfo.class)))
+				.thenReturn(objFromDB);
 		pizzaInventory.saveAndUpdatePizza(pizzaDTO);
 	}
 
@@ -89,7 +90,7 @@ public class PizzaInfoServiceUnitTest {
 		Assert.assertEquals(response, PizzaShopConstants.SUCCESSFUL_OPERATION);
 
 	}
-	
+
 	/**
 	 * Add Pizza information present in inventory.
 	 */
@@ -106,7 +107,7 @@ public class PizzaInfoServiceUnitTest {
 		String response = pizzaInventory.addAndUpdatePizzaBatch(pizzaInfoList);
 		Assert.assertEquals(response, PizzaShopConstants.SUCCESSFUL_OPERATION);
 	}
-	
+
 	/**
 	 * Update Pizza information present in inventory.
 	 */
@@ -122,9 +123,9 @@ public class PizzaInfoServiceUnitTest {
 
 		PizzaInfo pizzaInfo1 = new PizzaInfo("Test Pizza", PizzaInfoCategoryEnum.VEGETARIAN_PIZZA.getCategory(),
 				"Regular", 150.00, 10);
-		PizzaInfo pizzaInfo2 = new PizzaInfo("Test Pizza2",
-				PizzaInfoCategoryEnum.VEGETARIAN_PIZZA.getCategory(), "Large", 510.00, 20);
-		
+		PizzaInfo pizzaInfo2 = new PizzaInfo("Test Pizza2", PizzaInfoCategoryEnum.VEGETARIAN_PIZZA.getCategory(),
+				"Large", 510.00, 20);
+
 		when(pizzaInfoRepository.findByPizzaNameAndPizzaSize("Test Pizza", "Regular")).thenReturn(pizzaInfo1);
 		when(pizzaInfoRepository.findByPizzaNameAndPizzaSize("Test Pizza", "Large")).thenReturn(pizzaInfo2);
 		String response = pizzaInventory.addAndUpdatePizzaBatch(pizzaInfoList);

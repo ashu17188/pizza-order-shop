@@ -83,9 +83,7 @@ public class IngredientContoller {
 	@GetMapping("/ingredients/{name}")
 	public AdditionalStuffInfoDTO getIngredientById(
 			@ApiParam("Unique name of ingredient like Black olive, Barbeque chicken etc.") @PathVariable(value = "name") String name) {
-		if (StringUtils.isEmpty(name))
-			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Ingredient name is required.");
-
+		Preconditions.checkArgument(!StringUtils.isEmpty(name),"Ingredient name is required.");
 		AdditionalStuffInfoDTO additionalStuffInfoDTO = ingredientInventory.getIngredientById(name);
 		RestPreconditions.check(additionalStuffInfoDTO, null, null);
 		log.info("Ingredient fetched successfully. {}", additionalStuffInfoDTO.toString());

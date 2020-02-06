@@ -97,4 +97,20 @@ public class IngredientServiceTest {
 		ingredientInventory.saveAndUpdateIngredientBatch(null);
 	}
 
+	/*Adding Ingredient two times should not create two records.
+	 */
+	@Test
+	public void addingSameIngredientTest(){
+		AdditionalStuffInfoDTO additionalStuffInfoDTO1 = new AdditionalStuffInfoDTO("Chicken tikka",
+				AdditionalStuffCategoryEnum.NON_VEG_TOPPINGS.getCategory(), 40.00, 50);
+		ingredientInventory.saveAndUpdateIngredient(additionalStuffInfoDTO1);
+		
+		AdditionalStuffInfoDTO additionalStuffInfoDTO2 = new AdditionalStuffInfoDTO("Chicken tikka",
+				AdditionalStuffCategoryEnum.NON_VEG_TOPPINGS.getCategory(), 40.00, 40);
+		ingredientInventory.saveAndUpdateIngredient(additionalStuffInfoDTO2);
+
+		AdditionalStuffInfoDTO objFromDB = ingredientInventory.getIngredientById("Chicken tikka");
+		Assert.assertEquals(objFromDB.getPrice(), 40,0.0);
+	}
+	 
 }

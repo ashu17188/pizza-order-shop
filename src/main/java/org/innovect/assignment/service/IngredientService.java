@@ -2,6 +2,7 @@ package org.innovect.assignment.service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import javax.transaction.Transactional;
 
@@ -34,7 +35,7 @@ public class IngredientService implements IngredientInventory {
 
 	@Override
 	public AdditionalStuffInfoDTO getIngredientById(String ingredientName) {
-		Preconditions.checkArgument(null!=ingredientName, "Ingredient name can not be null.");
+		Preconditions.checkArgument(null != ingredientName, "Ingredient name can not be null.");
 		AdditionalStuffInfo additionalStuffInfo = additionalStuffRepository.findById(ingredientName).orElse(null);
 		return new Gson().fromJson(new Gson().toJson(additionalStuffInfo, AdditionalStuffInfo.class),
 				AdditionalStuffInfoDTO.class);
@@ -43,16 +44,26 @@ public class IngredientService implements IngredientInventory {
 	@Override
 	public AdditionalStuffInfoDTO saveAndUpdateIngredient(AdditionalStuffInfoDTO additionalStuffInfoDTO) {
 		Preconditions.checkNotNull(additionalStuffInfoDTO);
-		AdditionalStuffInfo objFromDB = additionalStuffRepository.save(new Gson().fromJson(
-				new Gson().toJson(additionalStuffInfoDTO, AdditionalStuffInfoDTO.class), AdditionalStuffInfo.class));
-		
+		AdditionalStuffInfo objFromDB = additionalStuffRepository.findById(additionalStuffInfoDTO.getStuffName())
+				.orElse(new AdditionalStuffInfo());
+
+		if (StringUtils.isEmpty(objFromDB.getStuffName())) {
+			objFromDB = additionalStuffRepository
+					.save(new Gson().fromJson(new Gson().toJson(additionalStuffInfoDTO, AdditionalStuffInfoDTO.class),
+							AdditionalStuffInfo.class));
+		} else {
+			objFromDB.setStuffCategory(additionalStuffInfoDTO.getStuffCategory());
+			objFromDB.setPrice(additionalStuffInfoDTO.getPrice());
+			objFromDB.setStockQuantity(additionalStuffInfoDTO.getStockQuantity());
+			additionalStuffRepository.save(objFromDB);
+		}
 		return new Gson().fromJson(new Gson().toJson(objFromDB, AdditionalStuffInfo.class),
 				AdditionalStuffInfoDTO.class);
 	}
 
 	@Override
 	public void deleteIngredient(String name) {
-		Preconditions.checkArgument(null!=name, "Ingredient name can not be null.");
+		Preconditions.checkArgument(null != name, "Ingredient name can not be null.");
 		AdditionalStuffInfo ingredientObj = new AdditionalStuffInfo();
 		ingredientObj.setStuffName(name);
 		additionalStuffRepository.delete(ingredientObj);
@@ -61,8 +72,8 @@ public class IngredientService implements IngredientInventory {
 	@Override
 	@Transactional
 	public String saveAndUpdateIngredientBatch(List<AdditionalStuffInfoDTO> additionalStuffInfoDTOList) {
-		Preconditions.checkArgument(null != additionalStuffInfoDTOList,"Additional Stuff can not be empty." );
-		
+		Preconditions.checkArgument(null != additionalStuffInfoDTOList, "Additional Stuff can not be empty.");
+
 		List<AdditionalStuffInfo> additionalStuffInfoList = new ArrayList<>();
 		for (AdditionalStuffInfoDTO additionalStuffInfoDTO : additionalStuffInfoDTOList) {
 			AdditionalStuffInfo stuffObjFrmDB = additionalStuffRepository

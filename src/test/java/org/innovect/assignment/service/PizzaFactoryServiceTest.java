@@ -5,6 +5,9 @@ import java.util.List;
 
 import org.innovect.assignment.AppRunner;
 import org.innovect.assignment.data.LargePizzaTwoToppingsNoCostOrderData;
+import org.innovect.assignment.data.MoreThanOneCrustLargeOrderData;
+import org.innovect.assignment.data.MoreThanOneCrustMediumOrderData;
+import org.innovect.assignment.data.MoreThanOneCrustRegularOrderData;
 import org.innovect.assignment.data.NonVegPizzaPaneerToppingsOrderData;
 import org.innovect.assignment.data.NonVegPizzaWithTwoNonVegToppingsOrderData;
 import org.innovect.assignment.data.NormalOrderData;
@@ -252,6 +255,48 @@ public class PizzaFactoryServiceTest {
 	@Test(expected = RuntimeException.class)
 	public void submitNullOrderTest() {
 		 pizzaFactory.submitOrder(null);
+	}
+
+	/**
+	 * This test verifies whether Regular Pizza contains more than one crust. Data contains Pizza with more that
+	 * 1 Crust.
+	 */
+	@Test(expected = RuntimeException.class)
+	public void verifyMoreThanOneCrustRegularTest() {
+		SubmitOrderPostDTO submitOrderPostDTO = MoreThanOneCrustRegularOrderData.createSubmitOrderPostDTOObject();
+		pizzaFactory.verifyOrder(submitOrderPostDTO);
+	}
+
+	/**
+	 * This test verifies whether Medium Pizza contains more than one crust. Data contains Pizza with more that
+	 * 1 Crust.
+	 */
+	@Test(expected = RuntimeException.class)
+	public void verifyMoreThanOneCrustMediumTest() {
+		SubmitOrderPostDTO submitOrderPostDTO = MoreThanOneCrustMediumOrderData.createSubmitOrderPostDTOObject();
+		pizzaFactory.verifyOrder(submitOrderPostDTO);
+	}
+
+	/**
+	 * This test verifies whether Large Pizza contains more than one crust. Data contains Pizza with more that
+	 * 1 Crust.
+	 */
+	@Test(expected = RuntimeException.class)
+	public void verifyMoreThanOneCrustLargeTest() {
+		SubmitOrderPostDTO submitOrderPostDTO = MoreThanOneCrustLargeOrderData.createSubmitOrderPostDTOObject();
+		pizzaFactory.verifyOrder(submitOrderPostDTO);
+	}
+	
+
+	/**
+	 * Submit order having everything according to given business rule.
+	 */
+	@Test
+	public void getByOrderIdNormalOrderTest() {
+		SubmitOrderPostDTO submitOrderPostDTO = NormalOrderData.createSubmitOrderPostDTOObject();
+		SubmitOrderPostDTO response = pizzaFactory.submitOrder(submitOrderPostDTO);
+		SubmitOrderPostDTO objFetchFromDB = pizzaFactory.getOrderById(response.getOrderId());
+		Assert.assertEquals(response.getOrderId(), objFetchFromDB.getOrderId());
 	}
 
 }
